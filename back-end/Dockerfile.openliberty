@@ -1,0 +1,8 @@
+FROM store/oracle/jdk:11
+
+WORKDIR /opt
+RUN yum install unzip wget -y
+RUN wget -c https://repo1.maven.org/maven2/io/openliberty/openliberty-kernel/20.0.0.10/openliberty-kernel-20.0.0.10.zip
+RUN unzip openliberty-kernel-20.0.0.10.zip 
+RUN /opt/wlp/bin/server create default
+RUN ln -s /opt/wlp/usr/servers/default /config
