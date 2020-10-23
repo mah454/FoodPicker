@@ -1,6 +1,7 @@
-import { Component, OnInit } from "@angular/core";
-import { ApiResourcesService } from "../_apiservice/api-resources.service";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../_service/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: "app-login",
@@ -8,15 +9,12 @@ import { HttpClient } from "@angular/common/http";
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
-  constructor(private http: HttpClient) {}
+  constructor(private auth: AuthService,private route: ActivatedRoute) {
+  }
 
   ngOnInit(): void {}
 
   public login() {
-    window.location.href = "http://localhost:8080/api/v1/auth/login";
-    // let obs = this.http.get("/api/v1/auth/login");
-    // obs.subscribe((e) => {
-    // console.log(e);
-    // });
+    this.auth.login()
   }
 }

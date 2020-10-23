@@ -1,0 +1,24 @@
+<div class="calendar noselect">
+  <div class="header">
+    <span>{{ getCurrentMonth() }}</span>
+  </div>
+  <div class="weekends">
+    <div *ngFor="let wn of getWeekEndNames()">
+      {{ wn }}
+    </div>
+  </div>
+  <div class="days">
+    <div class="non-day" *ngFor="let d of getSkipDays()">
+      {{ "" }}
+    </div>
+
+    <!-- [ngClass]="{ weekend: isWeekEnd(d), today: isToday(d) }" -->
+    <div
+      class="day"
+      *ngFor="let d of getMonthLength()"
+      [ngClass]="getDayClass(d)"
+    >
+      {{ convertToPersianDigits(d) }}
+    </div>
+  </div>
+</div>

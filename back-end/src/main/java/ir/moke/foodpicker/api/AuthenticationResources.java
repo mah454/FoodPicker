@@ -17,9 +17,8 @@
 
 package ir.moke.foodpicker.api;
 
-import ir.moke.foodpicker.auth.JWTCredential;
+import ir.moke.foodpicker.auth.TokenProvider;
 import ir.moke.foodpicker.http.FanapResourceProvider;
-import ir.moke.foodpicker.repository.JWTCredentialRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -28,12 +27,17 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Path("auth")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -42,6 +46,7 @@ import java.security.Principal;
 public class AuthenticationResources {
 
     private String state;
+    private Client client ;
 
     @EJB
     private FanapResourceProvider fanapResourceProvider;
@@ -49,43 +54,56 @@ public class AuthenticationResources {
     @Inject
     private SecurityContext securityContext;
 
-    @EJB
-    private JWTCredentialRepository jwtCredentialRepository;
-
     @Inject
     @ConfigProperty(name = "foodpicker.frontEnd.baseUrl")
-    private String frontEndUrl;
+    private String frontEndTarget;
+
+    @EJB
+    private TokenProvider tokenProvider;
+
+    @Context
+    private HttpServletResponse response;
 
     @PostConstruct
     public void init() {
+        this.client = ClientBuilder.newClient();
         this.state = RandomStringUtils.random(14, true, true);
     }
 
     @GET
     @Path("login")
-    public Response login() throws IOException {
-        URI loginUri = fanapResourceProvider.getLoginUri(state);
-        return Response.temporaryRedirect(loginUri).build();
+    public Response login() {
+        String loginUri = fanapResourceProvider.getLoginUri(state);
+        Map<String, String> responseData = new HashMap<>();
+        responseData.put("url", loginUri);
+        return Response.ok(responseData).build();
     }
 
     @GET
     @Path("callback")
-    public Response ssoCallBack(@QueryParam("code") String authorizeCode, @QueryParam("state") String state) throws Exception {
-        if (csrfProtected(state)) return Response.status(Response.Status.UNAUTHORIZED).build();
+    public Response ssoCallBack(@QueryParam("code") String authorizeCode,
+                                @QueryParam("state") String state) {
+        if (csrfProtected(state))
+            return Response.temporaryRedirect(URI.create(frontEndTarget)).status(Response.Status.UNAUTHORIZED).build();
 
         Principal callerPrincipal = securityContext.getCallerPrincipal();
         if (callerPrincipal != null) {
-            return Response.temporaryRedirect(URI.create(frontEndUrl)).build();
+            String token = response.getHeader("token").split(" ")[1].trim();
+            return Response.temporaryRedirect(URI.create(frontEndTarget + "?token=" + token)).build();
         } else {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.temporaryRedirect(URI.create(frontEndTarget)).status(Response.Status.UNAUTHORIZED).build();
         }
     }
 
     @GET
-    @Path("roles")
-    public Response getRoles() {
-        JWTCredential credential = jwtCredentialRepository.find(securityContext.getCallerPrincipal().getName());
-        return Response.ok(credential).build();
+    @Path("verify")
+    public Response verifyToken(@QueryParam("token") String token) {
+        boolean isValid = tokenProvider.verify(token);
+        if (isValid) {
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
     private boolean csrfProtected(String state) {

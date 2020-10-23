@@ -92,14 +92,13 @@ public class FanapResourceProvider {
                 .build();
     }
 
-    public URI getLoginUri(String state) {
-        String uri = ssoBaseUrl + authorizePath
+    public String getLoginUri(String state) {
+        return ssoBaseUrl + authorizePath
                 + "?client_id=" + clientId
                 + "&response_type=" + responseType
                 + "&redirect_uri=" + foodpickerBaseUrl + callBackUri
                 + "&scope=" + scope
                 + "&state=" + state;
-        return URI.create(uri);
     }
 
     public String getAccessToken(String authorizeCode) {

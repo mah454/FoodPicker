@@ -85,7 +85,6 @@ public class TokenProvider {
             }
             return decode.issuer.equals(jwtIssuer);
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }

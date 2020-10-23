@@ -1,1 +1,41 @@
-<p>panel works!</p>
+<div class="layout-base">
+  <div class="background-filter">
+    <div class="header">
+      <div class="menu">
+        <ul>
+          <li
+            [routerLink]="['/panel/food']"
+            routerLinkActive="router-link-active"
+          >
+            <fa-icon [icon]="handPoint"></fa-icon>
+          </li>
+          <li
+            [routerLink]="['/panel/allocation']"
+            routerLinkActive="router-link-active"
+          >
+            <fa-icon [icon]="utensils"></fa-icon>
+          </li>
+          <li
+            [routerLink]="['/panel/customers']"
+            routerLinkActive="router-link-active"
+          >
+            <fa-icon [icon]="usersCog"></fa-icon>
+          </li>
+          <li
+            [routerLink]="['/panel/orders']"
+            routerLinkActive="router-link-active"
+          >
+            <fa-icon [icon]="list"></fa-icon>
+          </li>
+        </ul>
+      </div>
+      <div class="logout">
+        <fa-icon [icon]="signOut"></fa-icon>
+      </div>
+    </div>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

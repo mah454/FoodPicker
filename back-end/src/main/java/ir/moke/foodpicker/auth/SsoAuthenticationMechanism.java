@@ -55,6 +55,10 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
     @ConfigProperty(name = "foodpicker.api.callBack")
     private String callBackPath;
 
+    @Inject
+    @ConfigProperty(name = "foodpicker.api.login")
+    private String loginPath;
+
     @EJB
     private FanapResourceProvider fanapResourceProvider;
 
@@ -102,7 +106,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
                         JWTCredentialRepository.save(credential);
                     }
                     token = tokenProvider.createToken(userProfile.getUsername(), roles);
-                    context.getResponse().addHeader("FPJWT", "Bearer " + token);
+                    context.getResponse().setHeader("token", "Bearer " + token);
                     return context.notifyContainerAboutLogin(userProfile.getUsername(), roles);
                 } else {
                     return context.responseUnauthorized();
@@ -110,6 +114,8 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
             } else {
                 return context.responseUnauthorized();
             }
+        } else if (reqUri.equals(loginPath)) {
+            return context.doNothing();
         } else if (token != null) {
             boolean isValid = tokenProvider.verify(token);
             if (isValid) {
@@ -126,7 +132,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
     }
 
     private String extractTokenFromHeader(HttpMessageContext context) {
-        String jwt = context.getRequest().getHeader("FPJWT");
+        String jwt = context.getRequest().getHeader("token");
         if (jwt != null && jwt.startsWith("Bearer")) {
             return jwt.substring("Bearer".length()).trim();
         }

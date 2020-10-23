@@ -26,7 +26,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Fanap :: FoodPicker</name>
-    
+
     <dependencies>
         <dependency>
             <groupId>javax</groupId>
@@ -65,6 +65,16 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>67.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.13.1</version>
         </dependency>
     </dependencies>
 
@@ -110,9 +120,9 @@
                 <artifactId>liberty-maven-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>
-<!--                    <jvmOptions>-->
-<!--                        <param>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=7777</param>-->
-<!--                    </jvmOptions>-->
+                    <!--                    <jvmOptions>-->
+                    <!--                        <param>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=7777</param>-->
+                    <!--                    </jvmOptions>-->
                 </configuration>
             </plugin>
         </plugins>
