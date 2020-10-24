@@ -17,27 +17,27 @@
 
 package ir.moke.foodpicker.entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Table
 @Entity
-@SequenceGenerator(name = "default_seq", sequenceName = "food_seq", allocationSize = 1)
-public class Food extends BaseEntity {
+@SequenceGenerator(name = "default_seq", sequenceName = "FoodCategory_seq", allocationSize = 1)
+public class FoodCategory extends BaseEntity {
 
     @Column(name = "name", unique = true)
-    @NotNull(message = "Food name must not be null")
-    @NotEmpty(message = "Food name must not be empty")
+    @NotNull(message = "Category name must not be null")
+    @NotEmpty(message = "Category name must not be empty")
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private FoodCategory foodCategory ;
-
-    public Food() {
+    public FoodCategory() {
     }
 
-    public Food(String name) {
+    public FoodCategory(String name) {
         this.name = name;
     }
 
@@ -47,13 +47,5 @@ public class Food extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public FoodCategory getFoodCategory() {
-        return foodCategory;
-    }
-
-    public void setFoodCategory(FoodCategory foodCategory) {
-        this.foodCategory = foodCategory;
     }
 }

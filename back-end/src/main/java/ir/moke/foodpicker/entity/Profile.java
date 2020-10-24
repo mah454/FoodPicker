@@ -20,16 +20,22 @@ package ir.moke.foodpicker.entity;
 import javax.persistence.*;
 import java.util.List;
 
-@Table
 @Entity
+@Table
 @SequenceGenerator(name = "default_seq", sequenceName = "profile_seq", allocationSize = 1)
 public class Profile extends BaseEntity {
 
     private String firstName;
     private String lastName;
+
+    @Column(unique = true)
     private long userId;
+
+    @Column(unique = true)
     private String ssoId;
     private String nickName;
+
+    @Column(unique = true)
     private String username;
 
     @ManyToMany(fetch = FetchType.LAZY)

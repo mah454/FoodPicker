@@ -22,6 +22,7 @@ import ir.moke.foodpicker.entity.Profile;
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Optional;
 
 @Singleton
 public class ProfileRepository {
@@ -31,5 +32,21 @@ public class ProfileRepository {
 
     public void save(Profile profile) {
         em.persist(profile);
+    }
+
+    public void update(Profile profile) {
+        em.merge(profile);
+    }
+
+    public void saveOrUpdate(Profile profile) {
+        Optional<Profile> optionalProfile = findByUsername(profile.getUsername());
+        optionalProfile.ifPresentOrElse(e -> {
+            profile.setId(e.getId());
+            update(profile);
+        }, () -> save(profile));
+    }
+
+    public Optional<Profile> findByUsername(String username) {
+        return Optional.ofNullable(em.find(Profile.class, username));
     }
 }

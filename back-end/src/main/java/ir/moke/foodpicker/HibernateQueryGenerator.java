@@ -17,10 +17,7 @@
 
 package ir.moke.foodpicker;
 
-import ir.moke.foodpicker.entity.Beverage;
-import ir.moke.foodpicker.entity.Food;
-import ir.moke.foodpicker.entity.Profile;
-import ir.moke.foodpicker.entity.Role;
+import ir.moke.foodpicker.entity.*;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -33,13 +30,14 @@ import java.util.Map;
 
 public class HibernateQueryGenerator {
     public static void main(String[] args) {
-        createSchema();
-//        updateSchema();
+//        createSchema();
+        updateSchema();
     }
 
     private static void addEntityClass(MetadataSources metadata) {
         metadata.addAnnotatedClass(Beverage.class);
         metadata.addAnnotatedClass(Food.class);
+        metadata.addAnnotatedClass(FoodCategory.class);
         metadata.addAnnotatedClass(Profile.class);
         metadata.addAnnotatedClass(Role.class);
     }
