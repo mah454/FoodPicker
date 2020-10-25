@@ -1,7 +1,7 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
-import { loginPath, verifyTokenPath } from "./food-picker-env";
+import { loginPath, logoutPath, verifyTokenPath } from "./food-picker-env";
 
 interface LoginResponse {
   url: String;
@@ -22,6 +22,14 @@ export class AuthService {
     );
   }
 
+  public logout() {
+    this.http
+      .get(logoutPath)
+      .toPromise()
+      .then(() => this.removeToken())
+      .then(() => this.route.navigate(["/login"]));
+  }
+
   public storeToken(token: string) {
     localStorage.setItem("token", token);
   }
@@ -34,22 +42,14 @@ export class AuthService {
     localStorage.removeItem("token");
   }
 
-  public validateToken(token: string) {
-    let reqParam = new HttpParams().set("token", token);
-
-    this.http
-      .get(verifyTokenPath, { observe: "response", params: reqParam })
-      .toPromise()
-      .then(
-        (response) => {
-          this.storeToken(token);
-          this.route.navigate(["panel"]);
-        },
-        (err) => {
-          this.removeToken();
-          this.route.navigate(["login"]);
-        }
-      );
+  public validateToken() {
+    this.http.get(verifyTokenPath, { observe: "response" }).subscribe(
+      (response) => this.route.navigate(["panel"]),
+      (err) => {
+        this.removeToken();
+        this.route.navigate(["/login"]);
+      }
+    );
   }
 
   public isLoggedIn() {

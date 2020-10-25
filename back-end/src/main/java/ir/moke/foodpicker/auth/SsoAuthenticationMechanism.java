@@ -89,7 +89,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
         } else if (reqUri.equals(loginPath)) {
             return context.doNothing();
         } else if (token != null) {
-            var validationResult = identityStoreHandler.validate(new JWTCredential(token));
+            var validationResult = identityStoreHandler.validate(new JWTCredential(null,null,null,token));
             if (validationResult.getStatus() == CredentialValidationResult.Status.VALID) {
                 return context.notifyContainerAboutLogin(validationResult.getCallerPrincipal().getName(), validationResult.getCallerGroups());
             }
@@ -102,7 +102,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
     }
 
     private AuthenticationStatus handleSsoCallbackRequest(HttpServletRequest request, HttpMessageContext context) {
-        String token;
+        String token = null;
         String authorizeCode = request.getParameter("code");
         String state = request.getParameter("state");
         if (authorizeCode != null && !authorizeCode.isEmpty() && state != null && !state.isEmpty()) {
@@ -114,8 +114,8 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
                 if (userProfile == null) {
                     return context.responseUnauthorized();
                 }
+                Optional<Profile> optionalProfile = profileRepository.findByUsername(userProfile.getUsername());
                 if (userProfile.getUsername().equals(superUserName)) {
-                    Optional<Profile> optionalProfile = profileRepository.findByUsername(userProfile.getUsername());
                     if (optionalProfile.isPresent()) {
                         userProfile = optionalProfile.get();
                         userProfile.getRoles().clear();
@@ -126,10 +126,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
                             .collect(toSet());
                     userProfile.setRoles(roleTypes.stream().map(roleRepository::find).collect(toSet()));
                     roleNames = roleTypes.stream().map(Enum::name).collect(Collectors.toUnmodifiableSet());
-                    JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames, accessToken);
-                    JWTCredentialRepository.save(credential);
                 } else {
-                    Optional<Profile> optionalProfile = profileRepository.findByUsername(userProfile.getUsername());
                     if (optionalProfile.isPresent()) {
                         return context.notifyContainerAboutLogin(userProfile.getUsername(), mapToRoleSet(optionalProfile.get()));
                     }
@@ -139,12 +136,12 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
                     roleTypes.add(statisticRole.getRoleType());
                     roleTypes.add(foodPickerRole.getRoleType());
                     roleNames = roleTypes.stream().map(Enum::name).collect(Collectors.toUnmodifiableSet());
-                    JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames, accessToken);
-                    JWTCredentialRepository.save(credential);
                 }
                 profileRepository.saveOrUpdate(userProfile);
                 token = tokenProvider.createToken(userProfile.getUsername(), roleNames);
-                context.getResponse().setHeader("token", "Bearer " + token);
+                JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames, accessToken,token);
+                JWTCredentialRepository.save(credential);
+                context.getResponse().setHeader("token", "bearer " + token);
                 return context.notifyContainerAboutLogin(userProfile.getUsername(), roleNames);
             } else {
                 return context.responseUnauthorized();
@@ -160,8 +157,8 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
 
     private String extractTokenFromHeader(HttpMessageContext context) {
         String jwt = context.getRequest().getHeader("token");
-        if (jwt != null && jwt.startsWith("Bearer")) {
-            return jwt.substring("Bearer".length()).trim();
+        if (jwt != null && jwt.startsWith("bearer")) {
+            return jwt.substring("bearer".length()).trim();
         }
         return null;
     }

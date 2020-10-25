@@ -15,12 +15,14 @@ export class AppComponent {
       let token = this.auth.getToken();
       const len = this.getParameterLength(location.search);
       if (token) {
-        this.auth.validateToken(token);
+        this.auth.validateToken();
       } else if (len > 0) {
         const params = this.getParameters(location.search);
         token = params["token"];
         if (token) {
-          this.auth.validateToken(token);
+          this.auth.storeToken(token);
+          console.log(token);
+          this.auth.validateToken();
         } else {
           router.navigate(["login"]);
         }

@@ -67,7 +67,7 @@ public class TokenProvider {
         try {
             JWT decode = JWT.getDecoder().decode(token, hmacVerifier);
             List<String> list = (List<String>) decode.getAllClaims().get("roles");
-            return new JWTCredential(decode.subject, new HashSet<>(list), null);
+            return new JWTCredential(decode.subject, new HashSet<>(list), null,token);
         } catch (Exception e) {
             return null;
         }

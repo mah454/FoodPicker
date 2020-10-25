@@ -21,14 +21,14 @@ import ir.moke.foodpicker.repository.JWTCredentialRepository;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Stateful;
+import javax.enterprise.context.ApplicationScoped;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-@Stateful
+@ApplicationScoped
 public class AuthorizationIdentityStore implements IdentityStore {
 
     private Set<JWTCredential> JWT_CREDENTIALS;

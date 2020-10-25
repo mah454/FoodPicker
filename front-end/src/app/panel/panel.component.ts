@@ -8,6 +8,7 @@ import {
   faUsersCog,
   faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
+import { AuthService } from "../_service/auth.service";
 
 @Component({
   selector: "app-panel",
@@ -23,7 +24,11 @@ export class PanelComponent implements OnInit {
   list = faList;
   handPoint = faHandPointer;
 
-  constructor() {}
+  constructor(private auth: AuthService) {}
 
   ngOnInit(): void {}
+
+  public logout() {
+    this.auth.logout();
+  }
 }

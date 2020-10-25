@@ -49,7 +49,7 @@ public class ProfileRepository {
 
     public Optional<Profile> findByUsername(String username) {
         try {
-            Profile profile = (Profile) em.createQuery("select p from Profile p where p.username=:username")
+            Profile profile = (Profile) em.createQuery("select p from Profile p join fetch p.roles r where p.username=:username")
                     .setParameter("username", username)
                     .getSingleResult();
             return Optional.ofNullable(profile);

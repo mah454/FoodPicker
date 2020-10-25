@@ -21,7 +21,7 @@ import ir.moke.foodpicker.repository.JWTCredentialRepository;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.ejb.Stateful;
+import javax.enterprise.context.ApplicationScoped;
 import javax.security.enterprise.credential.Credential;
 import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStore;
@@ -29,7 +29,7 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
-@Stateful
+@ApplicationScoped
 public class AuthenticationIdentityStore implements IdentityStore {
 
     private Set<JWTCredential> JWT_CREDENTIALS;
@@ -50,11 +50,12 @@ public class AuthenticationIdentityStore implements IdentityStore {
         CredentialValidationResult result;
 
         if (credential instanceof JWTCredential) {
-            Optional<JWTCredential> jwtCredential = JWT_CREDENTIALS.stream().filter(jwt -> jwt.getUsername().equals(((JWTCredential) credential).getUsername())).findFirst();
-            if (jwtCredential.isPresent()) {
+            JWTCredential jwtCredential = (JWTCredential) credential;
+            Optional<JWTCredential> optionalJWTCredential = JWT_CREDENTIALS.stream().filter(jwt -> jwt.getToken().equals(jwtCredential.getToken())).findFirst();
+            if (optionalJWTCredential.isPresent()) {
                 boolean verify = tokenProvider.verify(((JWTCredential) credential).getToken());
                 if (verify) {
-                    result = new CredentialValidationResult(jwtCredential.get().getUsername());
+                    result = new CredentialValidationResult(optionalJWTCredential.get().getUsername());
                 } else {
                     return CredentialValidationResult.INVALID_RESULT;
                 }

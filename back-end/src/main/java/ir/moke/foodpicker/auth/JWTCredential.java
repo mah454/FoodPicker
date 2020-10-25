@@ -26,13 +26,10 @@ public class JWTCredential implements Credential {
     private String token;
     private String accessToken;
 
-    public JWTCredential(String username, Set<String> roles, String accessToken) {
+    public JWTCredential(String username, Set<String> roles, String accessToken,String token) {
         this.username = username;
         this.roles = roles;
         this.accessToken = accessToken;
-    }
-
-    public JWTCredential(String token) {
         this.token = token;
     }
 

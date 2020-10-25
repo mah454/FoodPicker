@@ -89,22 +89,22 @@ public class AuthenticationResources {
     public Response ssoCallBack(@QueryParam("code") String authorizeCode,
                                 @QueryParam("state") String state) {
         if (csrfProtected(state))
-            return Response.temporaryRedirect(URI.create(frontEndTarget)).status(Response.Status.UNAUTHORIZED).build();
+            return Response.seeOther(URI.create(frontEndTarget)).build();
 
         Principal callerPrincipal = securityContext.getCallerPrincipal();
         if (callerPrincipal != null) {
             String token = response.getHeader("token").split(" ")[1].trim();
             return Response.temporaryRedirect(URI.create(frontEndTarget + "?token=" + token)).build();
         } else {
-            return Response.temporaryRedirect(URI.create(frontEndTarget)).status(Response.Status.UNAUTHORIZED).build();
+            return Response.temporaryRedirect(URI.create(frontEndTarget)).build();
         }
     }
 
     @GET
     @Path("verify")
-    public Response verifyToken(@QueryParam("token") String token) {
-        boolean isValid = tokenProvider.verify(token);
-        if (isValid) {
+    public Response verifyToken(@HeaderParam("token") String token) {
+        System.out.println(token);
+        if (securityContext.getCallerPrincipal() != null) {
             return Response.ok().build();
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
@@ -113,11 +113,10 @@ public class AuthenticationResources {
 
     @GET
     @Path("logout")
-    public Response logout(@QueryParam("token") String bearerToken) {
+    public Response logout(@HeaderParam("token") String token) {
         try {
             String username = securityContext.getCallerPrincipal().getName();
-            String token = bearerToken.substring("Bearer".length()).trim();
-            JWTCredential jwtCredential = jwtCredentialRepository.findByToken(token);
+            JWTCredential jwtCredential = jwtCredentialRepository.findByToken(token.substring("bearer ".length()).trim());
             fanapResourceProvider.logout(jwtCredential.getAccessToken());
             jwtCredentialRepository.remove(username);
         } catch (Exception ignore) {
