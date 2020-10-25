@@ -24,7 +24,9 @@ import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Singleton
 public class RoleRepository {
@@ -39,11 +41,11 @@ public class RoleRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Role> find() {
+    public Set<Role> find() {
         if (roles.isEmpty()) {
             roles.addAll(em.createQuery("from Role").getResultList());
         }
-        return roles;
+        return new HashSet<>(roles);
     }
 
     public Role find(RoleType roleType) {

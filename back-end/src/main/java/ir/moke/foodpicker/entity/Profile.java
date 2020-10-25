@@ -18,7 +18,7 @@
 package ir.moke.foodpicker.entity;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table
@@ -37,10 +37,9 @@ public class Profile extends BaseEntity {
 
     @Column(unique = true)
     private String username;
-    private boolean isAdminManaged ;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private List<Role> roles;
+    private Set<Role> roles;
 
     public String getFirstName() {
         return firstName;
@@ -90,19 +89,11 @@ public class Profile extends BaseEntity {
         this.username = username;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
-    }
-
-    public boolean isAdminManaged() {
-        return isAdminManaged;
-    }
-
-    public void setAdminManaged(boolean adminManaged) {
-        isAdminManaged = adminManaged;
     }
 }

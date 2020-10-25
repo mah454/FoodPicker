@@ -1,5 +1,4 @@
 -- Update table profile --
-alter table if exists Profile add column isAdminManaged boolean default false;
 alter table if exists Profile add constraint UK_evw0xmgxtasppitmiw4t1swl0 unique (ssoId);
 alter table if exists Profile add constraint UK_22mmjoes7q36gl8630mpekx7y unique (userId);
 alter table if exists Profile add constraint UK_1wpe1j4lyc9m4yny8kjfv7y0s unique (username);

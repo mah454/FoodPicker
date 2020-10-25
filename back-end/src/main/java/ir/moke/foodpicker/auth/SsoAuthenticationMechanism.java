@@ -38,6 +38,7 @@ import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -108,21 +109,30 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
             String accessToken = fanapResourceProvider.getAccessToken(authorizeCode);
             if (accessToken != null) {
                 Set<RoleType> roleTypes;
-                Set<String> roleNames ;
+                Set<String> roleNames;
                 Profile userProfile = fanapResourceProvider.getUserProfile(accessToken);
                 if (userProfile == null) {
                     return context.responseUnauthorized();
                 }
                 if (userProfile.getUsername().equals(superUserName)) {
+                    Optional<Profile> optionalProfile = profileRepository.findByUsername(userProfile.getUsername());
+                    if (optionalProfile.isPresent()) {
+                        userProfile = optionalProfile.get();
+                        userProfile.getRoles().clear();
+                    }
                     roleTypes = roleRepository.find()
                             .stream()
                             .map(Role::getRoleType)
                             .collect(toSet());
-                    userProfile.setRoles(roleTypes.stream().map(roleRepository::find).collect(Collectors.toList()));
+                    userProfile.setRoles(roleTypes.stream().map(roleRepository::find).collect(toSet()));
                     roleNames = roleTypes.stream().map(Enum::name).collect(Collectors.toUnmodifiableSet());
                     JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames);
                     JWTCredentialRepository.save(credential);
                 } else {
+                    Optional<Profile> optionalProfile = profileRepository.findByUsername(userProfile.getUsername());
+                    if (optionalProfile.isPresent()) {
+                        return context.notifyContainerAboutLogin(userProfile.getUsername(), mapToRoleSet(optionalProfile.get()));
+                    }
                     Role statisticRole = roleRepository.find(RoleType.STATISTIC);
                     Role foodPickerRole = roleRepository.find(RoleType.FOOD_PICKER);
                     roleTypes = new HashSet<>();
@@ -142,6 +152,10 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
         } else {
             return context.responseUnauthorized();
         }
+    }
+
+    private Set<String> mapToRoleSet(Profile profile) {
+        return profile.getRoles().stream().map(Role::getRoleType).map(Enum::name).collect(Collectors.toUnmodifiableSet());
     }
 
     private String extractTokenFromHeader(HttpMessageContext context) {

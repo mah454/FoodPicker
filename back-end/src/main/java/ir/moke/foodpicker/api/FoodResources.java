@@ -53,6 +53,7 @@ public class FoodResources {
 
     @POST
     @Path("add")
+    @RolesAllowed("FOOD_MANAGER")
     public Response add(@Valid Food food) {
         foodRepository.save(food);
         URI uri = uriInfo.getBaseUriBuilder()
