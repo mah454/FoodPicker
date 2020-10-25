@@ -75,6 +75,7 @@ public class TokenProvider {
 
 
     public boolean verify(String token) {
+        if (token == null) return false;
         try {
             JWT decode = JWT.getDecoder().decode(token, hmacVerifier);
             if (decode.isExpired()) {

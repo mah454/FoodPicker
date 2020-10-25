@@ -33,11 +33,13 @@ import javax.security.enterprise.AuthenticationException;
 import javax.security.enterprise.AuthenticationStatus;
 import javax.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 import javax.security.enterprise.authentication.mechanism.http.HttpMessageContext;
+import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -82,57 +84,63 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
         String reqUri = request.getRequestURI();
         String token = extractTokenFromHeader(context);
         if (reqUri.equals(callBackPath)) {
-            String authorizeCode = request.getParameter("code");
-            String state = request.getParameter("state");
-            if (authorizeCode != null && !authorizeCode.isEmpty() && state != null && !state.isEmpty()) {
-                String accessToken = fanapResourceProvider.getAccessToken(authorizeCode);
-                if (accessToken != null) {
-                    Set<String> roles;
-                    Profile userProfile = fanapResourceProvider.getUserProfile(accessToken);
-                    if (userProfile == null) {
-                        return context.responseUnauthorized();
-                    }
-                    if (userProfile.getUsername().equals(superUserName)) {
-                        roles = roleRepository.find()
-                                .stream()
-                                .map(Role::getRoleType)
-                                .map(RoleType::name)
-                                .collect(toSet());
-                        JWTCredential credential = new JWTCredential(userProfile.getUsername(), roles);
-                        JWTCredentialRepository.save(credential);
-                    } else {
-                        Role statisticRole = roleRepository.find(RoleType.STATISTIC);
-                        Role foodPickerRole = roleRepository.find(RoleType.FOOD_PICKER);
-                        roles = new HashSet<>();
-                        roles.add(statisticRole.getRoleType().name());
-                        roles.add(foodPickerRole.getRoleType().name());
-                        JWTCredential credential = new JWTCredential(userProfile.getUsername(), roles);
-                        JWTCredentialRepository.save(credential);
-                    }
-                    profileRepository.saveOrUpdate(userProfile);
-                    token = tokenProvider.createToken(userProfile.getUsername(), roles);
-                    context.getResponse().setHeader("token", "Bearer " + token);
-                    return context.notifyContainerAboutLogin(userProfile.getUsername(), roles);
-                } else {
-                    return context.responseUnauthorized();
-                }
-            } else {
-                return context.responseUnauthorized();
-            }
+            return handleSsoCallbackRequest(request, context);
         } else if (reqUri.equals(loginPath)) {
             return context.doNothing();
         } else if (token != null) {
-            boolean isValid = tokenProvider.verify(token);
-            if (isValid) {
-                JWTCredential credential = tokenProvider.getCredential(token);
-                if (credential == null) return context.responseUnauthorized();
-                return context.notifyContainerAboutLogin(credential.getUsername(), credential.getRoles());
+            var validationResult = identityStoreHandler.validate(new JWTCredential(token));
+            if (validationResult.getStatus() == CredentialValidationResult.Status.VALID) {
+                return context.notifyContainerAboutLogin(validationResult.getCallerPrincipal().getName(), validationResult.getCallerGroups());
             }
             return context.responseUnauthorized();
         } else if (context.isProtected()) {
             return context.responseUnauthorized();
         } else {
             return context.doNothing();
+        }
+    }
+
+    private AuthenticationStatus handleSsoCallbackRequest(HttpServletRequest request, HttpMessageContext context) {
+        String token;
+        String authorizeCode = request.getParameter("code");
+        String state = request.getParameter("state");
+        if (authorizeCode != null && !authorizeCode.isEmpty() && state != null && !state.isEmpty()) {
+            String accessToken = fanapResourceProvider.getAccessToken(authorizeCode);
+            if (accessToken != null) {
+                Set<RoleType> roleTypes;
+                Set<String> roleNames ;
+                Profile userProfile = fanapResourceProvider.getUserProfile(accessToken);
+                if (userProfile == null) {
+                    return context.responseUnauthorized();
+                }
+                if (userProfile.getUsername().equals(superUserName)) {
+                    roleTypes = roleRepository.find()
+                            .stream()
+                            .map(Role::getRoleType)
+                            .collect(toSet());
+                    userProfile.setRoles(roleTypes.stream().map(roleRepository::find).collect(Collectors.toList()));
+                    roleNames = roleTypes.stream().map(Enum::name).collect(Collectors.toUnmodifiableSet());
+                    JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames);
+                    JWTCredentialRepository.save(credential);
+                } else {
+                    Role statisticRole = roleRepository.find(RoleType.STATISTIC);
+                    Role foodPickerRole = roleRepository.find(RoleType.FOOD_PICKER);
+                    roleTypes = new HashSet<>();
+                    roleTypes.add(statisticRole.getRoleType());
+                    roleTypes.add(foodPickerRole.getRoleType());
+                    roleNames = roleTypes.stream().map(Enum::name).collect(Collectors.toUnmodifiableSet());
+                    JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames);
+                    JWTCredentialRepository.save(credential);
+                }
+                profileRepository.saveOrUpdate(userProfile);
+                token = tokenProvider.createToken(userProfile.getUsername(), roleNames);
+                context.getResponse().setHeader("token", "Bearer " + token);
+                return context.notifyContainerAboutLogin(userProfile.getUsername(), roleNames);
+            } else {
+                return context.responseUnauthorized();
+            }
+        } else {
+            return context.responseUnauthorized();
         }
     }
 

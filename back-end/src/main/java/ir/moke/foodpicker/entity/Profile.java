@@ -37,6 +37,7 @@ public class Profile extends BaseEntity {
 
     @Column(unique = true)
     private String username;
+    private boolean isAdminManaged ;
 
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Role> roles;
@@ -95,5 +96,13 @@ public class Profile extends BaseEntity {
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean isAdminManaged() {
+        return isAdminManaged;
+    }
+
+    public void setAdminManaged(boolean adminManaged) {
+        isAdminManaged = adminManaged;
     }
 }

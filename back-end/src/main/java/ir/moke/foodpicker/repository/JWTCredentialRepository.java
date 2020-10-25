@@ -37,4 +37,8 @@ public class JWTCredentialRepository {
                 .findFirst()
                 .orElse(null);
     }
+
+    public Set<JWTCredential> findAll() {
+        return JWT_CREDENTIALS;
+    }
 }

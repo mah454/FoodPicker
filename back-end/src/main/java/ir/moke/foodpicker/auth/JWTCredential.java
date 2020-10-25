@@ -21,12 +21,17 @@ import javax.security.enterprise.credential.Credential;
 import java.util.Set;
 
 public class JWTCredential implements Credential {
-    private final String username;
-    private final Set<String> roles;
+    private String username;
+    private Set<String> roles;
+    private String token;
 
     public JWTCredential(String username, Set<String> roles) {
         this.username = username;
         this.roles = roles;
+    }
+
+    public JWTCredential(String token) {
+        this.token = token;
     }
 
     public String getUsername() {
@@ -35,5 +40,9 @@ public class JWTCredential implements Credential {
 
     public Set<String> getRoles() {
         return roles;
+    }
+
+    public String getToken() {
+        return token;
     }
 }

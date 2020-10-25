@@ -21,6 +21,7 @@ import ir.moke.foodpicker.entity.Profile;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
@@ -47,6 +48,13 @@ public class ProfileRepository {
     }
 
     public Optional<Profile> findByUsername(String username) {
-        return Optional.ofNullable(em.find(Profile.class, username));
+        try {
+            Profile profile = (Profile) em.createQuery("select p from Profile p where p.username=:username")
+                    .setParameter("username", username)
+                    .getSingleResult();
+            return Optional.ofNullable(profile);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }
