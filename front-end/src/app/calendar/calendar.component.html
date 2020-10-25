@@ -8,17 +8,16 @@
     </div>
   </div>
   <div class="days">
-    <div class="non-day" *ngFor="let d of getSkipDays()">
+    <div class="non-day day-box" *ngFor="let d of getSkipDays()">
       {{ "" }}
     </div>
 
-    <!-- [ngClass]="{ weekend: isWeekEnd(d), today: isToday(d) }" -->
     <div
-      class="day"
-      *ngFor="let d of getMonthLength()"
-      [ngClass]="getDayClass(d)"
+      class="day day-box"
+      *ngFor="let d of getMonthDays()"
+      [ngClass]="d.cssClass"
     >
-      {{ convertToPersianDigits(d) }}
+      {{ convertToPersianDigits(d.num) }}
     </div>
   </div>
 </div>

@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
+import { Food } from "../model/food";
+import { FoodService } from "../_service/food.service";
 
 @Component({
-  selector: 'app-food-allocation',
-  templateUrl: './food-allocation.component.html',
-  styleUrls: ['./food-allocation.component.scss']
+  selector: "app-food-allocation",
+  templateUrl: "./food-allocation.component.html",
+  styleUrls: ["./food-allocation.component.scss"],
 })
 export class FoodAllocationComponent implements OnInit {
+  constructor(private foodService: FoodService) {}
 
-  constructor() { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
+  public addFood(name: String) {
+    const food = new Food(name);
+
+    this.foodService.addFood(food).subscribe(
+      (response) => console.log(response),
+      (err) => console.log(err),
+      () => console.log("FINISHED")
+    );
   }
-
 }

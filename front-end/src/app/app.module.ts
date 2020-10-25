@@ -6,14 +6,14 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
 import { CalendarComponent } from "./calendar/calendar.component";
+import { CustomerManagementComponent } from "./customer-management/customer-management.component";
 import { FoodAllocationComponent } from "./food-allocation/food-allocation.component";
+import { FoodSelectionComponent } from "./food-selection/food-selection.component";
 import { LoginComponent } from "./login/login.component";
+import { OrdersComponent } from "./orders/orders.component";
 import { PanelComponent } from "./panel/panel.component";
 import { AuthGuard } from "./_service/auth-guard";
 import { TokenInterceptorService } from "./_service/token-interceptor.service";
-import { CustomerManagementComponent } from './customer-management/customer-management.component';
-import { OrdersComponent } from './orders/orders.component';
-import { FoodSelectionComponent } from './food-selection/food-selection.component';
 
 @NgModule({
   declarations: [

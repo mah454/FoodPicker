@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { faCheck, faCheckDouble } from "@fortawesome/free-solid-svg-icons";
 import * as jalaali from "../../../node_modules/jalaali-js/dist/jalaali.min.js";
+import { Day } from "../model/day";
 
 @Component({
   selector: "app-calendar",
@@ -98,13 +99,26 @@ export class CalendarComponent implements OnInit {
     return this.date["jd"];
   }
 
-  public getMonthLength() {
+  public getMonthDays() {
     const len = jalaali.jalaaliMonthLength(
       this.getJalaliYear(),
       this.getJalaliMonth()
     );
 
-    return Array.from({ length: len }, (_, i) => i + 1);
+    let days: Array<Day> = [];
+    for (let i = 1; i < len + 1; i++) {
+      var day: Day = {
+        num: i,
+        isToday: this.isToday(i),
+        isWeekEnd: this.isWeekEnd(i),
+        cssClass: this.getDayClass(i),
+        isHoliday: false,
+        isLock: false,
+      };
+      days.push(day);
+    }
+    return days;
+    // return Array.from({ length: len }, (_, i) => i + 1);
   }
 
   public convertToPersianDigits(num: number) {

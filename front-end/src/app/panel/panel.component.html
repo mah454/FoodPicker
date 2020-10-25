@@ -7,30 +7,30 @@
             [routerLink]="['/panel/food']"
             routerLinkActive="router-link-active"
           >
-            <fa-icon [icon]="handPoint"></fa-icon>
+            <span class="mdi mdi-calendar-cursor"></span>
           </li>
           <li
             [routerLink]="['/panel/allocation']"
             routerLinkActive="router-link-active"
           >
-            <fa-icon [icon]="utensils"></fa-icon>
+            <span class="mdi mdi-food-fork-drink"></span>
           </li>
           <li
             [routerLink]="['/panel/customers']"
             routerLinkActive="router-link-active"
           >
-            <fa-icon [icon]="usersCog"></fa-icon>
+            <span class="mdi mdi-account-cog"></span>
           </li>
           <li
             [routerLink]="['/panel/orders']"
             routerLinkActive="router-link-active"
           >
-            <fa-icon [icon]="list"></fa-icon>
+            <span class="mdi mdi-map-check"></span>
           </li>
         </ul>
       </div>
-      <div class="logout">
-        <fa-icon [icon]="signOut"></fa-icon>
+      <div class="logout" (click)="logout()">
+        <span class="mdi mdi-logout"></span>
       </div>
     </div>
 
