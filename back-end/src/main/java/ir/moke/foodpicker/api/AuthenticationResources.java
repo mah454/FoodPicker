@@ -17,8 +17,10 @@
 
 package ir.moke.foodpicker.api;
 
+import ir.moke.foodpicker.auth.JWTCredential;
 import ir.moke.foodpicker.auth.TokenProvider;
 import ir.moke.foodpicker.http.FanapResourceProvider;
+import ir.moke.foodpicker.repository.JWTCredentialRepository;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -46,10 +48,13 @@ import java.util.Map;
 public class AuthenticationResources {
 
     private String state;
-    private Client client ;
+    private Client client;
 
     @EJB
     private FanapResourceProvider fanapResourceProvider;
+
+    @EJB
+    private JWTCredentialRepository jwtCredentialRepository;
 
     @Inject
     private SecurityContext securityContext;
@@ -104,6 +109,20 @@ public class AuthenticationResources {
         } else {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+    }
+
+    @GET
+    @Path("logout")
+    public Response logout(@QueryParam("token") String bearerToken) {
+        try {
+            String username = securityContext.getCallerPrincipal().getName();
+            String token = bearerToken.substring("Bearer".length()).trim();
+            JWTCredential jwtCredential = jwtCredentialRepository.findByToken(token);
+            fanapResourceProvider.logout(jwtCredential.getAccessToken());
+            jwtCredentialRepository.remove(username);
+        } catch (Exception ignore) {
+        }
+        return Response.ok().build();
     }
 
     private boolean csrfProtected(String state) {

@@ -24,10 +24,12 @@ public class JWTCredential implements Credential {
     private String username;
     private Set<String> roles;
     private String token;
+    private String accessToken;
 
-    public JWTCredential(String username, Set<String> roles) {
+    public JWTCredential(String username, Set<String> roles, String accessToken) {
         this.username = username;
         this.roles = roles;
+        this.accessToken = accessToken;
     }
 
     public JWTCredential(String token) {
@@ -44,5 +46,9 @@ public class JWTCredential implements Credential {
 
     public String getToken() {
         return token;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
     }
 }

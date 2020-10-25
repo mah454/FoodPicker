@@ -32,13 +32,23 @@ public class JWTCredentialRepository {
         JWT_CREDENTIALS.add(credential);
     }
 
-    public JWTCredential find(String username) {
+    public JWTCredential findByUsername(String username) {
         return JWT_CREDENTIALS.stream().filter(e -> e.getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public JWTCredential findByToken(String token) {
+        return JWT_CREDENTIALS.stream().filter(e -> e.getToken().equals(token))
                 .findFirst()
                 .orElse(null);
     }
 
     public Set<JWTCredential> findAll() {
         return JWT_CREDENTIALS;
+    }
+
+    public void remove(String username) {
+        JWT_CREDENTIALS.remove(findByUsername(username));
     }
 }

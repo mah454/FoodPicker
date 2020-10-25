@@ -126,7 +126,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
                             .collect(toSet());
                     userProfile.setRoles(roleTypes.stream().map(roleRepository::find).collect(toSet()));
                     roleNames = roleTypes.stream().map(Enum::name).collect(Collectors.toUnmodifiableSet());
-                    JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames);
+                    JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames, accessToken);
                     JWTCredentialRepository.save(credential);
                 } else {
                     Optional<Profile> optionalProfile = profileRepository.findByUsername(userProfile.getUsername());
@@ -139,7 +139,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
                     roleTypes.add(statisticRole.getRoleType());
                     roleTypes.add(foodPickerRole.getRoleType());
                     roleNames = roleTypes.stream().map(Enum::name).collect(Collectors.toUnmodifiableSet());
-                    JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames);
+                    JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames, accessToken);
                     JWTCredentialRepository.save(credential);
                 }
                 profileRepository.saveOrUpdate(userProfile);

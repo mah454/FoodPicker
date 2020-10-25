@@ -74,6 +74,10 @@ public class FanapResourceProvider {
     private String tokenPath;
 
     @Inject
+    @ConfigProperty(name = "fanap.sso.api.revokeToken")
+    private String revokeTokenPath;
+
+    @Inject
     @ConfigProperty(name = "fanap.api.baseUrl")
     private String fanapBaseUrl;
 
@@ -124,6 +128,26 @@ public class FanapResourceProvider {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public boolean logout(String accessToken) {
+        String uri = ssoBaseUrl + revokeTokenPath;
+        String formData = "token_type_hint=access_token"
+                + "&token=" + accessToken
+                + "&client_id=" + clientId
+                + "&client_secret=" + clientSecret;
+        HttpRequest request = HttpRequest.newBuilder()
+                .setHeader("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(formData))
+                .uri(URI.create(uri))
+                .build();
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            return response.statusCode() == Response.Status.OK.getStatusCode();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
