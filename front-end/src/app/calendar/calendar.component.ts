@@ -141,7 +141,7 @@ export class CalendarComponent implements OnInit {
 
   public getDayClass(dayNum: number) {
     if (this.isToday(dayNum)) {
-      return "today";
+      return "today t1";
     } else if (this.isWeekEnd(dayNum)) {
       return "weekend";
     }

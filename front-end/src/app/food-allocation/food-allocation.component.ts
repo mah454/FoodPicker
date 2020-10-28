@@ -8,17 +8,18 @@ import { FoodService } from "../_service/food.service";
   styleUrls: ["./food-allocation.component.scss"],
 })
 export class FoodAllocationComponent implements OnInit {
+  foodName: string;
   constructor(private foodService: FoodService) {}
-
   ngOnInit(): void {}
 
-  public addFood(name: String) {
+  public addFood() {
     const food = new Food(name);
 
-    this.foodService.addFood(food).subscribe(
-      (response) => console.log(response),
-      (err) => console.log(err),
-      () => console.log("FINISHED")
-    );
+    console.log(this.foodName);
+    // this.foodService.addFood(food).subscribe(
+    // (response) => console.log(response),
+    // (err) => console.log(err),
+    // () => console.log("FINISHED")
+    // );
   }
 }

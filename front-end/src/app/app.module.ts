@@ -25,6 +25,7 @@ import { TokenInterceptorService } from "./_service/token-interceptor.service";
     CustomerManagementComponent,
     OrdersComponent,
     FoodSelectionComponent,
+    FormsModule,
   ],
   imports: [
     BrowserModule,

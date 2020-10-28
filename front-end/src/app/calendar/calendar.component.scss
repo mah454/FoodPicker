@@ -6,6 +6,10 @@
   background-color: rgba($color: #d95a2c, $alpha: 0.75);
 }
 
+* {
+  box-sizing: border-box;
+}
+
 .calendar {
   margin-right: 20px;
   color: whitesmoke;
@@ -25,14 +29,13 @@
 
   .weekends {
     direction: rtl;
-    margin-top: 5px;
     display: flex;
-    padding: 7px 0;
     border-bottom: 1px solid #675d5d;
     font-family: "Droid Arabic Kufi";
     div {
       width: 14.28%;
       margin-left: 5px;
+      padding: 14px 0;
       text-align: center;
       font-weight: bold;
       font-size: 18px;
@@ -45,34 +48,24 @@
     display: flex;
     flex-wrap: wrap;
     text-align: center;
-    font-weight: bold;
-    padding: 10px 0;
-
-    .day-box {
-      width: 12.78%;
-    }
+    font-weight: 300;
+    margin-top: 12px;
 
     .day {
+      width: 13.24%;
+      padding: 10px 0;
       margin-top: 5px;
       margin-left: 5px;
-      padding: 14px 0;
       transition: 0.5s;
       border: 1px solid transparent;
 
       .check {
         display: block;
-        margin: 15px 38px;
+        margin: 13px 42px;
         position: absolute;
         font-size: 18px;
         color: rgba($color: #bdcc5b, $alpha: 1);
       }
-    }
-
-    .non-day {
-      margin-top: 5px;
-      margin-left: 5px;
-      border: 1px solid transparent;
-      cursor: initial;
     }
 
     .day:hover {
@@ -81,8 +74,17 @@
       cursor: pointer;
     }
 
-    .day:active {
+    div:active {
       background-color: rgba($color: #7a6c6c, $alpha: 0.7);
+    }
+
+    .non-day {
+      width: 13.24%;
+      padding: 10px 0;
+      margin-top: 5px;
+      margin-left: 5px;
+      transition: 0.5s;
+      border: 1px solid transparent;
     }
   }
 }
