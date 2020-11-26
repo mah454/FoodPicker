@@ -17,7 +17,10 @@
 
 package ir.moke.foodpicker;
 
-import ir.moke.foodpicker.entity.*;
+import ir.moke.foodpicker.entity.Food;
+import ir.moke.foodpicker.entity.FoodCategory;
+import ir.moke.foodpicker.entity.Profile;
+import ir.moke.foodpicker.entity.Role;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
@@ -35,7 +38,6 @@ public class HibernateQueryGenerator {
     }
 
     private static void addEntityClass(MetadataSources metadata) {
-        metadata.addAnnotatedClass(Beverage.class);
         metadata.addAnnotatedClass(Food.class);
         metadata.addAnnotatedClass(FoodCategory.class);
         metadata.addAnnotatedClass(Profile.class);

@@ -11,25 +11,25 @@ export class AppComponent {
   title = "FoodPicker";
 
   constructor(private router: Router, private auth: AuthService) {
-    if (location.pathname === "/") {
-      let token = this.auth.getToken();
-      const len = this.getParameterLength(location.search);
+    // if (location.pathname === "/") {
+    let token = this.auth.getToken();
+    const len = this.getParameterLength(location.search);
+    if (token) {
+      this.auth.validateToken();
+    } else if (len > 0) {
+      const params = this.getParameters(location.search);
+      token = params["token"];
       if (token) {
+        this.auth.storeToken(token);
+        console.log(token);
         this.auth.validateToken();
-      } else if (len > 0) {
-        const params = this.getParameters(location.search);
-        token = params["token"];
-        if (token) {
-          this.auth.storeToken(token);
-          console.log(token);
-          this.auth.validateToken();
-        } else {
-          router.navigate(["login"]);
-        }
       } else {
         router.navigate(["login"]);
       }
+    } else {
+      router.navigate(["login"]);
     }
+    // }
   }
 
   private getParameters(url: string) {

@@ -17,24 +17,9 @@
 
 package ir.moke.foodpicker.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-
-@Table
-@Entity
-@SequenceGenerator(name = "default_seq", sequenceName = "beverage_seq", allocationSize = 1)
-public class Beverage extends BaseEntity {
-
-    @Column(name = "name",unique = true)
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+public enum FoodType {
+    FOOD,
+    DRINK,
+    SALAD,
+    DESSERT
 }

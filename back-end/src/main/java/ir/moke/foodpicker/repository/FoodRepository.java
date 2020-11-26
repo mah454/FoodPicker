@@ -18,6 +18,7 @@
 package ir.moke.foodpicker.repository;
 
 import ir.moke.foodpicker.entity.Food;
+import ir.moke.foodpicker.utils.JsonUtils;
 
 import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
@@ -25,19 +26,29 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Singleton
 public class FoodRepository {
+    private static final Logger logger = Logger.getLogger(FoodRepository.class.getName());
 
     @PersistenceContext
     private EntityManager em;
 
     public void save(Food food) {
+        logger.fine("Save food:" + JsonUtils.toJson(food));
         em.persist(food);
     }
 
     public Food update(Food food) {
+        logger.fine("Update food:" + JsonUtils.toJson(food));
         return em.merge(food);
+    }
+
+    public Food saveOrUpdate(Food food) {
+        Optional<Food> optionalFood = findById(food.getId());
+        optionalFood.ifPresentOrElse(e -> update(food), () -> save(food));
+        return food;
     }
 
     public Optional<Food> findByName(String name) {
@@ -63,5 +74,9 @@ public class FoodRepository {
     @SuppressWarnings("unchecked")
     public List<Food> findAll() {
         return (List<Food>) em.createQuery("from Food").getResultList();
+    }
+
+    public void delete(long id) {
+        findById(id).ifPresent(em::remove);
     }
 }

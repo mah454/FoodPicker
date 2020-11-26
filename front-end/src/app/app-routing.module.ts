@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { CustomerManagementComponent } from "./customer-management/customer-management.component";
-import { FoodAllocationComponent } from "./food-allocation/food-allocation.component";
-import { FoodSelectionComponent } from "./food-selection/food-selection.component";
-import { LoginComponent } from "./login/login.component";
-import { OrdersComponent } from "./orders/orders.component";
+import { CustomerManagementComponent } from "./pages/customer-management/customer-management.component";
+import { FeedAllocationComponent } from "./pages/feed-allocation/feed-allocation.component";
+import { FoodSelectionComponent } from "./pages/food-selection/food-selection.component";
+import { LoginComponent } from "./pages/login/login.component";
+import { OrdersComponent } from "./pages/orders/orders.component";
 import { PanelComponent } from "./panel/panel.component";
 import { AuthGuard } from "./_service/auth-guard";
 
@@ -16,7 +16,7 @@ const routes: Routes = [
     children: [
       {
         path: "",
-        redirectTo: "food",
+        redirectTo: "allocation",
         pathMatch: "full",
       },
       {
@@ -25,7 +25,7 @@ const routes: Routes = [
       },
       {
         path: "allocation",
-        component: FoodAllocationComponent,
+        component: FeedAllocationComponent,
       },
       {
         path: "customers",

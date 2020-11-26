@@ -1,41 +1,44 @@
-<div class="layout-base">
-  <div class="background-filter">
-    <div class="header">
-      <div class="menu">
-        <ul>
-          <li
-            [routerLink]="['/panel/food']"
-            routerLinkActive="router-link-active"
-          >
-            <span class="mdi mdi-calendar-cursor"></span>
-          </li>
-          <li
-            [routerLink]="['/panel/allocation']"
-            routerLinkActive="router-link-active"
-          >
-            <span class="mdi mdi-food-fork-drink"></span>
-          </li>
-          <li
-            [routerLink]="['/panel/customers']"
-            routerLinkActive="router-link-active"
-          >
-            <span class="mdi mdi-account-cog"></span>
-          </li>
-          <li
-            [routerLink]="['/panel/orders']"
-            routerLinkActive="router-link-active"
-          >
-            <span class="mdi mdi-map-check"></span>
-          </li>
-        </ul>
-      </div>
-      <div class="logout" (click)="logout()">
-        <span class="mdi mdi-logout"></span>
-      </div>
-    </div>
-
-    <div class="content">
-      <router-outlet></router-outlet>
+<div class="background">
+  <div class="wrapper">
+    <div class="container">
+      <main class="box-shadow">
+        <nav>
+          <ul>
+            <li
+              [routerLink]="['/panel/food']"
+              routerLinkActive="router-link-active"
+            >
+              <span class="mdi mdi-calendar-cursor"></span>
+            </li>
+            <li
+              [routerLink]="['/panel/allocation']"
+              routerLinkActive="router-link-active"
+            >
+              <span class="mdi mdi-silverware-fork-knife"></span>
+            </li>
+            <li
+              [routerLink]="['/panel/customers']"
+              routerLinkActive="router-link-active"
+            >
+              <span class="mdi mdi-account-cog"></span>
+            </li>
+            <li
+              [routerLink]="['/panel/orders']"
+              routerLinkActive="router-link-active"
+            >
+              <span class="mdi mdi-map-check"></span>
+            </li>
+          </ul>
+          <ul class="logout">
+            <li (click)="logout()">
+              <span class="mdi mdi-logout"></span>
+            </li>
+          </ul>
+        </nav>
+        <article>
+          <router-outlet></router-outlet>
+        </article>
+      </main>
     </div>
   </div>
 </div>

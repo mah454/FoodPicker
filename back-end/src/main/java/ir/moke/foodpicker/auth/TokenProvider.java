@@ -57,7 +57,7 @@ public class TokenProvider {
                 .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))
                 .setSubject(username)
                 .addClaim("roles", roles)
-                .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(60));
+                .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusDays(1));
 
         return JWT.getEncoder().encode(jwt, signer);
     }
@@ -67,7 +67,7 @@ public class TokenProvider {
         try {
             JWT decode = JWT.getDecoder().decode(token, hmacVerifier);
             List<String> list = (List<String>) decode.getAllClaims().get("roles");
-            return new JWTCredential(decode.subject, new HashSet<>(list), null,token);
+            return new JWTCredential(decode.subject, new HashSet<>(list), null, token);
         } catch (Exception e) {
             return null;
         }

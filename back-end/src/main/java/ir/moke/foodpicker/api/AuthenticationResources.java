@@ -103,7 +103,6 @@ public class AuthenticationResources {
     @GET
     @Path("verify")
     public Response verifyToken(@HeaderParam("token") String token) {
-        System.out.println(token);
         if (securityContext.getCallerPrincipal() != null) {
             return Response.ok().build();
         } else {

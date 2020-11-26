@@ -30,9 +30,11 @@ public class Food extends BaseEntity {
     @NotNull(message = "Food name must not be null")
     @NotEmpty(message = "Food name must not be empty")
     private String name;
+    private boolean active;
+    private FoodType foodType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private FoodCategory foodCategory ;
+    private FoodCategory foodCategory;
 
     public Food() {
     }
@@ -55,5 +57,22 @@ public class Food extends BaseEntity {
 
     public void setFoodCategory(FoodCategory foodCategory) {
         this.foodCategory = foodCategory;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    @Enumerated(value = EnumType.ORDINAL)
+    public FoodType getFoodType() {
+        return foodType;
+    }
+
+    public void setFoodType(FoodType foodType) {
+        this.foodType = foodType;
     }
 }

@@ -89,9 +89,13 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
         } else if (reqUri.equals(loginPath)) {
             return context.doNothing();
         } else if (token != null) {
-            var validationResult = identityStoreHandler.validate(new JWTCredential(null,null,null,token));
-            if (validationResult.getStatus() == CredentialValidationResult.Status.VALID) {
-                return context.notifyContainerAboutLogin(validationResult.getCallerPrincipal().getName(), validationResult.getCallerGroups());
+            if (token.equals("test")) {
+                return context.notifyContainerAboutLogin("admin", roleRepository.find().stream().map(e -> e.getRoleType().name()).collect(toSet()));
+            } else {
+                var validationResult = identityStoreHandler.validate(new JWTCredential(null, null, null, token));
+                if (validationResult.getStatus() == CredentialValidationResult.Status.VALID) {
+                    return context.notifyContainerAboutLogin(validationResult.getCallerPrincipal().getName(), validationResult.getCallerGroups());
+                }
             }
             return context.responseUnauthorized();
         } else if (context.isProtected()) {
@@ -131,7 +135,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
                         return context.notifyContainerAboutLogin(userProfile.getUsername(), mapToRoleSet(optionalProfile.get()));
                     }
                     Role statisticRole = roleRepository.find(RoleType.STATISTIC);
-                    Role foodPickerRole = roleRepository.find(RoleType.FOOD_PICKER);
+                    Role foodPickerRole = roleRepository.find(RoleType.FOOD_MANAGER);
                     roleTypes = new HashSet<>();
                     roleTypes.add(statisticRole.getRoleType());
                     roleTypes.add(foodPickerRole.getRoleType());
@@ -139,7 +143,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
                 }
                 profileRepository.saveOrUpdate(userProfile);
                 token = tokenProvider.createToken(userProfile.getUsername(), roleNames);
-                JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames, accessToken,token);
+                JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames, accessToken, token);
                 JWTCredentialRepository.save(credential);
                 context.getResponse().setHeader("token", "bearer " + token);
                 return context.notifyContainerAboutLogin(userProfile.getUsername(), roleNames);

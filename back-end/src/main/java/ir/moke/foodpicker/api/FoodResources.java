@@ -25,11 +25,8 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-import java.net.URI;
 import java.util.Optional;
 
 @Path("food")
@@ -41,9 +38,6 @@ public class FoodResources {
     @EJB
     private FoodRepository foodRepository;
 
-    @Context
-    private UriInfo uriInfo;
-
     @GET
     @Path("list")
     @RolesAllowed({"FOOD_MANAGER"})
@@ -52,15 +46,11 @@ public class FoodResources {
     }
 
     @POST
-    @Path("add")
+    @Path("save")
     @RolesAllowed("FOOD_MANAGER")
     public Response add(@Valid Food food) {
-        foodRepository.save(food);
-        URI uri = uriInfo.getBaseUriBuilder()
-                .path(FoodResources.class)
-                .path(FoodResources.class, "findFoodById")
-                .build(food.getId());
-        return Response.created(uri).build();
+        foodRepository.saveOrUpdate(food);
+        return Response.ok(food).build();
     }
 
     @GET
@@ -79,8 +69,16 @@ public class FoodResources {
 
     @GET
     @Path("{id}")
-    @RolesAllowed({"FOOD_MANAGER"})
+    @RolesAllowed({"FOOD_MANAGER", "FOOD_PICKER"})
     public Response findFoodById(@PathParam("id") long id) {
         return Response.ok(foodRepository.findById(id)).build();
+    }
+
+    @DELETE
+    @Path("/delete/{id}")
+    @RolesAllowed({"FOOD_MANAGER"})
+    public Response deleteFood(@PathParam("id") long id) {
+        foodRepository.delete(id);
+        return Response.ok().build();
     }
 }
