@@ -17,6 +17,7 @@
 
 package ir.moke.foodpicker.setup;
 
+import ir.moke.foodpicker.utils.TtyCodecs;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.Configuration;
 
@@ -26,21 +27,28 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.sql.DataSource;
+import java.util.logging.Logger;
 
 @Startup
 @Singleton
 @TransactionManagement(TransactionManagementType.BEAN)
-public class InitializeDatabase {
+public class InitializeDatabase implements TtyCodecs {
+
+    @Inject
+    private Logger logger;
 
     @Resource(name = "jdbc/jta-datasource")
     private DataSource dataSource;
 
     @PostConstruct
     public void init() {
+        logger.info(BACKGROUND_GREEN + "*** DATABASE INITIALIZATION STARTED ***" + RESET);
         Flyway flyway = Flyway.configure().configuration(getConfiguration()).load();
         flyway.repair();
         flyway.migrate();
+        logger.info(BACKGROUND_GREEN + "*** DATABASE INITIALIZATION COMPLETED ***" + RESET);
     }
 
     private Configuration getConfiguration() {
