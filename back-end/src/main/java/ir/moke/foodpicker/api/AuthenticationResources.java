@@ -31,8 +31,6 @@ import javax.inject.Inject;
 import javax.security.enterprise.SecurityContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -48,7 +46,9 @@ import java.util.logging.Logger;
 @Stateless
 public class AuthenticationResources {
     private String state;
-    private Client client;
+
+    @Inject
+    private Logger logger;
 
     @EJB
     private FanapResourceProvider fanapResourceProvider;
@@ -58,9 +58,6 @@ public class AuthenticationResources {
 
     @Inject
     private SecurityContext securityContext;
-
-    @Inject
-    private Logger logger;
 
     @Inject
     @ConfigProperty(name = "foodpicker.frontEnd.baseUrl")
@@ -78,7 +75,6 @@ public class AuthenticationResources {
 
     @PostConstruct
     public void init() {
-        this.client = ClientBuilder.newClient();
         this.state = RandomStringUtils.random(14, true, true);
     }
 
@@ -137,7 +133,10 @@ public class AuthenticationResources {
     @GET
     @Path("test")
     public Response testApi() {
-        logger.info("Test API LOG");
+        logger.info("*** INFO LOG ***");
+//        logger.fine("*** FINE LOG ***");
+//        logger.severe("*** SEVERE LOG ***");
+//        logger.warning("*** WARNING LOG ***");
         return Response.ok().build();
     }
 }

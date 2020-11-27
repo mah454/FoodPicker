@@ -17,9 +17,16 @@
 
 package ir.moke.foodpicker.cdi;
 
+import ir.moke.foodpicker.logger.LogFormat;
+import ir.moke.foodpicker.logger.LogHandler;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
+import javax.inject.Inject;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 @ApplicationScoped
@@ -27,6 +34,15 @@ public class LoggerProducer {
 
     @Produces
     private Logger logger(InjectionPoint injectionPoint) {
-        return Logger.getLogger(injectionPoint.getMember().getDeclaringClass().getName());
+        LogManager.getLogManager().reset();
+
+        Handler handler = new LogHandler();
+        handler.setLevel(Level.ALL);
+        handler.setFormatter(new LogFormat());
+
+        Logger logger = Logger.getGlobal();
+        logger.setLevel(Level.ALL);
+        logger.addHandler(handler);
+        return logger;
     }
 }

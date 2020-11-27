@@ -17,8 +17,18 @@
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class TestMainClass {
     public static void main(String[] args) {
-        System.out.println(RandomStringUtils.random(14,true,true));
+        System.out.println(RandomStringUtils.random(14, true, true));
+        testDate();
+    }
+
+    private static void testDate() {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        LocalDateTime localDateTime = LocalDateTime.now();
+        System.out.println(localDateTime.format(dateFormat));
     }
 }
