@@ -54,6 +54,9 @@
                  name="food-picker"
                  context-root="/"/>
 
+
+<!--    <logging consoleSource="message,trace" consoleFormat="dev" traceSpecification="{ir.moke.foodpicker}={fine}"/>-->
+
 <!--    <cors domain="/"
           allowedOrigins="*"
           allowedMethods="GET, DELETE, POST, PUT"

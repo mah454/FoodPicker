@@ -160,7 +160,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
     }
 
     private String extractTokenFromHeader(HttpMessageContext context) {
-        String jwt = context.getRequest().getHeader("token");
+        String jwt = context.getRequest().getHeader("authorization");
         if (jwt != null && jwt.startsWith("bearer")) {
             return jwt.substring("bearer".length()).trim();
         }

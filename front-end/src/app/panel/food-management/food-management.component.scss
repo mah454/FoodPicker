@@ -1,0 +1,60 @@
+article {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 60px 1fr;
+}
+
+nav {
+  width: 100%;
+  display: grid;
+  align-content: center;
+  padding: 10px 20px;
+  // background-color: blue;
+  position: relative;
+
+  .searchBox {
+    padding-top: 5px;
+    float: right;
+    // display: flex;
+    input {
+      color: white;
+      border-radius: 45px;
+      border: 1px solid #777;
+      background-color: transparent;
+      width: 300px;
+      font-size: 14px;
+      text-align: right;
+      line-height: 20px;
+      padding-right: 20px;
+      height: 40px;
+    }
+
+    .searchIcon {
+      display: grid;
+      align-content: center;
+      justify-content: center;
+      color: white;
+      position: absolute;
+      // padding-left: 12px;
+      height: 40px;
+      width: 40px;
+    }
+  }
+
+  .navigation {
+    display: grid;
+    position: absolute;
+    align-content: center;
+    height: 55px;
+    margin-left: 5px;
+    ul {
+      padding-top: 5px;
+      // padding: 0;
+      list-style: none;
+      li {
+        margin-left: 5px;
+        float: left;
+      }
+    }
+  }
+}

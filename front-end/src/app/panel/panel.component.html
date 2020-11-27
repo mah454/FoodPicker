@@ -1,44 +1,37 @@
-<div class="background">
-  <div class="wrapper">
-    <div class="container">
-      <main class="box-shadow">
-        <nav>
-          <ul>
-            <li
-              [routerLink]="['/panel/food']"
-              routerLinkActive="router-link-active"
-            >
-              <span class="mdi mdi-calendar-cursor"></span>
-            </li>
-            <li
-              [routerLink]="['/panel/allocation']"
-              routerLinkActive="router-link-active"
-            >
-              <span class="mdi mdi-silverware-fork-knife"></span>
-            </li>
-            <li
-              [routerLink]="['/panel/customers']"
-              routerLinkActive="router-link-active"
-            >
-              <span class="mdi mdi-account-cog"></span>
-            </li>
-            <li
-              [routerLink]="['/panel/orders']"
-              routerLinkActive="router-link-active"
-            >
-              <span class="mdi mdi-map-check"></span>
-            </li>
-          </ul>
-          <ul class="logout">
-            <li (click)="logout()">
-              <span class="mdi mdi-logout"></span>
-            </li>
-          </ul>
-        </nav>
-        <article>
-          <router-outlet></router-outlet>
-        </article>
-      </main>
-    </div>
-  </div>
+<div class="video-container">
+  <video
+    #videoPlayer
+    (ended)="videoEnded()"
+    width="400px"
+    autoplay
+    muted
+    [src]="videoList[0]"
+  ></video>
+  <div class="screen-overlay"></div>
+  <main>
+    <article>
+      <router-outlet></router-outlet>
+    </article>
+    <aside>
+      <div class="navigation-btn">
+        <span class="mdi mdi-calendar-cursor"></span>
+      </div>
+      <div
+        class="navigation-btn"
+        routerLink="food-management"
+        routerLinkActive="activeLink"
+      >
+        <span class="mdi mdi-hamburger"></span>
+      </div>
+      <div class="navigation-btn">
+        <span class="mdi mdi-clipboard-list-outline"></span>
+      </div>
+      <div class="navigation-btn">
+        <span class="mdi mdi-account-cog"></span>
+      </div>
+      <div class="navigation-btn" (click)="logout()">
+        <span class="mdi mdi-logout"></span>
+      </div>
+    </aside>
+  </main>
 </div>

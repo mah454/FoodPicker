@@ -40,13 +40,13 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Path("auth")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Stateless
 public class AuthenticationResources {
-
     private String state;
     private Client client;
 
@@ -60,8 +60,15 @@ public class AuthenticationResources {
     private SecurityContext securityContext;
 
     @Inject
+    private Logger logger;
+
+    @Inject
     @ConfigProperty(name = "foodpicker.frontEnd.baseUrl")
     private String frontEndTarget;
+
+    @Inject
+    @ConfigProperty(name = "foodpicker.frontEnd.loginPath")
+    private String frontEndLoginPath;
 
     @EJB
     private TokenProvider tokenProvider;
@@ -94,7 +101,7 @@ public class AuthenticationResources {
         Principal callerPrincipal = securityContext.getCallerPrincipal();
         if (callerPrincipal != null) {
             String token = response.getHeader("token").split(" ")[1].trim();
-            return Response.temporaryRedirect(URI.create(frontEndTarget + "?token=" + token)).build();
+            return Response.temporaryRedirect(URI.create(frontEndTarget + frontEndLoginPath + "?token=" + token)).build();
         } else {
             return Response.temporaryRedirect(URI.create(frontEndTarget)).build();
         }
@@ -102,7 +109,7 @@ public class AuthenticationResources {
 
     @GET
     @Path("verify")
-    public Response verifyToken(@HeaderParam("token") String token) {
+    public Response verifyToken() {
         if (securityContext.getCallerPrincipal() != null) {
             return Response.ok().build();
         } else {
@@ -125,5 +132,12 @@ public class AuthenticationResources {
 
     private boolean csrfProtected(String state) {
         return !state.equals(this.state);
+    }
+
+    @GET
+    @Path("test")
+    public Response testApi() {
+        logger.info("Test API LOG");
+        return Response.ok().build();
     }
 }

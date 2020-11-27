@@ -1,0 +1,39 @@
+<article>
+  <nav>
+    <form>
+      <div class="searchBox">
+        <span class="mdi mdi-magnify searchIcon"></span>
+        <input type="text" placeholder="جستجو یا اضافه کردن" />
+      </div>
+    </form>
+
+    <div class="navigation">
+      <ul>
+        <li
+          class="navigation-btn"
+          routerLink="food-definition"
+          routerLinkActive="activeLink"
+        >
+          <span class="mdi mdi-hamburger"></span>
+        </li>
+        <li
+          class="navigation-btn"
+          routerLink="drink-definition"
+          routerLinkActive="activeLink"
+        >
+          <span class="mdi mdi-beer-outline"></span>
+        </li>
+        <li
+          class="navigation-btn"
+          routerLink="salad-definition"
+          routerLinkActive="activeLink"
+        >
+          <span class="mdi mdi-chili-hot"></span>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <section>
+    <router-outlet></router-outlet>
+  </section>
+</article>

@@ -1,34 +1,41 @@
-import { Component, OnInit } from "@angular/core";
-import {
-  faBars,
-  faHandPointer,
-  faList,
-  faSign,
-  faSignOutAlt,
-  faUsersCog,
-  faUtensils,
-} from "@fortawesome/free-solid-svg-icons";
-import { AuthService } from "../_service/auth.service";
+import { Component, ElementRef, ViewChild } from "@angular/core";
+import { ApiService } from "../_services/api.service";
 
 @Component({
   selector: "app-panel",
   templateUrl: "./panel.component.html",
   styleUrls: ["./panel.component.scss"],
 })
-export class PanelComponent implements OnInit {
-  faBars = faBars;
-  signOut = faSignOutAlt;
-  sign = faSign;
-  utensils = faUtensils;
-  usersCog = faUsersCog;
-  list = faList;
-  handPoint = faHandPointer;
+export class PanelComponent {
+  constructor(private api: ApiService) {}
+  @ViewChild("videoPlayer") videoPlayer: ElementRef;
 
-  constructor(private auth: AuthService) {}
+  private index = 0;
+  videoList = [
+    "../../assets/Background_Videos/FoodPack1_01_Videvo.webm",
+    "../../assets/Background_Videos/FoodPack1_03_Videvo.webm",
+    "../../assets/Background_Videos/FoodPack1_12_Videvo.webm",
+    "../../assets/Background_Videos/FoodPack1_14_Videvo.webm",
+  ];
 
-  ngOnInit(): void {}
+  videoEnded() {
+    if (this.index == this.videoList.length - 1) {
+      this.index = 0;
+    } else {
+      this.index++;
+    }
+    this.videoPlayer.nativeElement.abort = true;
+    this.playVideo();
+  }
 
-  public logout() {
-    this.auth.logout();
+  playVideo() {
+    this.videoPlayer.nativeElement.src = this.videoList[this.index];
+    this.videoPlayer.nativeElement.load();
+    this.videoPlayer.nativeElement.muted = true;
+    this.videoPlayer.nativeElement.play();
+  }
+
+  logout() {
+    this.api.logout();
   }
 }
