@@ -1,4 +1,8 @@
-<div class="video-container">
+<div class="spinner">
+  <app-spinner *ngIf="showSpinner"></app-spinner>
+</div>
+
+<div class="video-container" *ngIf="!showSpinner">
   <video
     #videoPlayer
     (ended)="videoEnded()"

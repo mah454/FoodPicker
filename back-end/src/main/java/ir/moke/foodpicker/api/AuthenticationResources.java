@@ -105,17 +105,18 @@ public class AuthenticationResources {
 
     @GET
     @Path("verify")
-    public Response verifyToken() {
+    public Response verifyToken(@HeaderParam("authorization") String token) {
         if (securityContext.getCallerPrincipal() != null) {
             return Response.ok().build();
         } else {
+            logger.warning("Access Unauthorized token:" + token);
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
     }
 
     @GET
     @Path("logout")
-    public Response logout(@HeaderParam("token") String token) {
+    public Response logout(@HeaderParam("authorization") String token) {
         try {
             String username = securityContext.getCallerPrincipal().getName();
             logger.info("Logout user " + username);

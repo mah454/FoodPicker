@@ -8,25 +8,40 @@ import { ApiService } from "../_services/api.service";
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
+  showSpinner = true;
   constructor(private api: ApiService, private router: Router) {
     let queryParams = this.getParameters();
     let token = api.getToken();
     if (token) {
       api.verifyToken().subscribe(
-        (resp) => router.navigate(["panel"]),
+        (resp) => {
+          router.navigate(["panel"]);
+          this.showSpinner = false;
+        },
         (err) => {
           router.navigate(["login"]);
           api.removeToken();
+          this.showSpinner = false;
         }
       );
     } else {
+      console.log("Token not Exists");
       token = queryParams["token"];
       if (token) {
         api.storeToken(token);
         api.verifyToken().subscribe(
-          (res) => router.navigate(["panel"]),
-          (err) => console.log("Error : " + err)
+          (res) => {
+            router.navigate(["panel"]);
+            this.showSpinner = false;
+          },
+          (err) => {
+            router.navigate(["login"]);
+            api.removeToken();
+            this.showSpinner = false;
+          }
         );
+      } else {
+        this.showSpinner = false;
       }
     }
   }

@@ -1,4 +1,7 @@
-<main>
+<div class="spinner">
+  <app-spinner *ngIf="showSpinner"></app-spinner>
+</div>
+<main *ngIf="!showSpinner">
   <div class="trigger">
     <div class="polygon-box p1">
       <img class="bk-img" src="../../assets/images/login-food.jpg" />

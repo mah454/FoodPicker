@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
+import { Router } from "@angular/router";
 import { ApiService } from "../_services/api.service";
 
 @Component({
@@ -7,7 +8,23 @@ import { ApiService } from "../_services/api.service";
   styleUrls: ["./panel.component.scss"],
 })
 export class PanelComponent {
-  constructor(private api: ApiService) {}
+  showSpinner = true;
+  constructor(private api: ApiService, private router: Router) {
+    let token = api.getToken();
+    if (token) {
+      api.verifyToken().subscribe(
+        (resp) => {
+          router.navigate(["panel"]);
+          this.showSpinner = false;
+        },
+        (err) => {
+          router.navigate(["login"]);
+          api.removeToken();
+          this.showSpinner = false;
+        }
+      );
+    }
+  }
   @ViewChild("videoPlayer") videoPlayer: ElementRef;
 
   private index = 0;

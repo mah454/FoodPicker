@@ -12,6 +12,7 @@ import { SaladDefinitionComponent } from "./panel/food-management/salad-definiti
 import { PanelComponent } from "./panel/panel.component";
 import { AuthGuard } from "./_services/AuthGuard.guard";
 import { TokenInterceptorInterceptor } from "./_services/token-interceptor.interceptor";
+import { SpinnerComponent } from './spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { TokenInterceptorInterceptor } from "./_services/token-interceptor.inter
     SaladDefinitionComponent,
     LoginComponent,
     PanelComponent,
+    SpinnerComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [
