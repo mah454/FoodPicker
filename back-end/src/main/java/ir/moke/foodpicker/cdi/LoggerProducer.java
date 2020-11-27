@@ -19,11 +19,12 @@ package ir.moke.foodpicker.cdi;
 
 import ir.moke.foodpicker.logger.LogFormat;
 import ir.moke.foodpicker.logger.LogHandler;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;
-import javax.inject.Inject;
+import java.io.IOException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -32,11 +33,13 @@ import java.util.logging.Logger;
 @ApplicationScoped
 public class LoggerProducer {
 
+    private static final String logFileName = "logs/foodpicker.log";
+
     @Produces
-    private Logger logger(InjectionPoint injectionPoint) {
+    private Logger logger(InjectionPoint injectionPoint) throws IOException {
         LogManager.getLogManager().reset();
 
-        Handler handler = new LogHandler();
+        Handler handler = new LogHandler(logFileName, 2000, 5, true);
         handler.setLevel(Level.ALL);
         handler.setFormatter(new LogFormat());
 

@@ -33,9 +33,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.Charset;
 import java.time.Duration;
+import java.util.logging.Logger;
 
 @Singleton
 public class FanapResourceProvider {
+
+    @Inject
+    private Logger logger;
 
     @Inject
     @ConfigProperty(name = "foodpicker.api.baseUrl")
@@ -122,7 +126,9 @@ public class FanapResourceProvider {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (response.statusCode() == Response.Status.OK.getStatusCode()) {
                 JsonObject jsonObject = JsonUtils.fromJson(response.body(), JsonObject.class);
-                return jsonObject.getString("access_token");
+                String accessToken = jsonObject.getString("access_token");
+                logger.fine("Receive access token authorizeCode:" + authorizeCode + " access_token:" + accessToken);
+                return accessToken;
             }
             return null;
         } catch (Exception e) {
@@ -144,6 +150,7 @@ public class FanapResourceProvider {
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            logger.fine("Logout from sso accessToken:" + accessToken + " response:" + response.statusCode());
             return response.statusCode() == Response.Status.OK.getStatusCode();
         } catch (Exception e) {
             e.printStackTrace();
@@ -159,7 +166,6 @@ public class FanapResourceProvider {
                 .GET()
                 .uri(URI.create(uri))
                 .build();
-
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             JsonObject jsonObject = JsonUtils.fromJson(response.body(), JsonObject.class);

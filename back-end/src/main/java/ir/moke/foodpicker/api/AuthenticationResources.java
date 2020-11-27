@@ -118,6 +118,7 @@ public class AuthenticationResources {
     public Response logout(@HeaderParam("token") String token) {
         try {
             String username = securityContext.getCallerPrincipal().getName();
+            logger.info("Logout user " + username);
             JWTCredential jwtCredential = jwtCredentialRepository.findByToken(token.substring("bearer ".length()).trim());
             fanapResourceProvider.logout(jwtCredential.getAccessToken());
             jwtCredentialRepository.remove(username);

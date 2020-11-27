@@ -20,11 +20,15 @@ package ir.moke.foodpicker.repository;
 import ir.moke.foodpicker.auth.JWTCredential;
 
 import javax.ejb.Singleton;
+import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Singleton
 public class JWTCredentialRepository {
+    @Inject
+    private Logger logger;
 
     private static final Set<JWTCredential> JWT_CREDENTIALS = new HashSet<>();
 
@@ -49,6 +53,7 @@ public class JWTCredentialRepository {
     }
 
     public void remove(String username) {
+        logger.fine("Remove credential " + username);
         JWT_CREDENTIALS.remove(findByUsername(username));
     }
 }

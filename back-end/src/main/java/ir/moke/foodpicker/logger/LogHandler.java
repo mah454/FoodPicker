@@ -1,11 +1,10 @@
 package ir.moke.foodpicker.logger;
 
-import java.io.OutputStream;
-import java.util.logging.ConsoleHandler;
+import java.io.IOException;
+import java.util.logging.FileHandler;
 
-public class LogHandler extends ConsoleHandler {
-    @Override
-    protected synchronized void setOutputStream(OutputStream out) throws SecurityException {
-        super.setOutputStream(System.out);
+public class LogHandler extends FileHandler {
+    public LogHandler(String pattern, long limit, int count, boolean append) throws IOException {
+        super(pattern, limit, count, append);
     }
 }
