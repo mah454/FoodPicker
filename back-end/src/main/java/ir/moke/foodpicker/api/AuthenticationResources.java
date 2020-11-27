@@ -129,14 +129,4 @@ public class AuthenticationResources {
     private boolean csrfProtected(String state) {
         return !state.equals(this.state);
     }
-
-    @GET
-    @Path("test")
-    public Response testApi() {
-        logger.info("*** INFO LOG ***");
-//        logger.fine("*** FINE LOG ***");
-//        logger.severe("*** SEVERE LOG ***");
-//        logger.warning("*** WARNING LOG ***");
-        return Response.ok().build();
-    }
 }
