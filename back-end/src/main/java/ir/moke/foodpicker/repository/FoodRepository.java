@@ -18,26 +18,57 @@
 package ir.moke.foodpicker.repository;
 
 import ir.moke.foodpicker.entity.Food;
+import ir.moke.foodpicker.exception.BusinessException;
+import ir.moke.foodpicker.exception.DatabaseExceptionMapper;
+import ir.moke.foodpicker.exception.ExceptionCode;
 import ir.moke.foodpicker.utils.JsonUtils;
 
-import javax.ejb.Singleton;
+import javax.annotation.Resource;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-@Singleton
+@Stateless
+@TransactionManagement(TransactionManagementType.BEAN)
 public class FoodRepository {
-    private static final Logger logger = Logger.getLogger(FoodRepository.class.getName());
+
+    @Inject
+    private Logger logger;
 
     @PersistenceContext
     private EntityManager em;
 
+    @Resource
+    private UserTransaction transaction;
+
+    private void handleDatabaseException(Food food, Exception e) {
+        String foodType = food.getFoodType() != null ? food.getFoodType().getName() : "غذا";
+        String sqlState = DatabaseExceptionMapper.getSqlState(e);
+        if (sqlState.equals("23505")) {
+            throw new BusinessException(ExceptionCode.OBJECT_EXISTS, String.format("این %s در حال حاظر موجود می باشد.", foodType));
+        } else {
+            e.printStackTrace();
+            throw new BusinessException(ExceptionCode.UNKNOWN_ERROR);
+        }
+    }
+
     public void save(Food food) {
+        try {
+            transaction.begin();
+            em.persist(food);
+            transaction.commit();
+        } catch (Exception e) {
+            handleDatabaseException(food, e);
+        }
         logger.fine("Save food:" + JsonUtils.toJson(food));
-        em.persist(food);
     }
 
     public Food update(Food food) {

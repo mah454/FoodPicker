@@ -22,6 +22,7 @@ import ir.moke.foodpicker.entity.Profile;
 import ir.moke.foodpicker.entity.Role;
 import ir.moke.foodpicker.entity.RoleType;
 import ir.moke.foodpicker.http.FanapResourceProvider;
+import ir.moke.foodpicker.repository.JWTCredentialRepository;
 import ir.moke.foodpicker.repository.ProfileRepository;
 import ir.moke.foodpicker.repository.RoleRepository;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -79,7 +80,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
     private ProfileRepository profileRepository;
 
     @EJB
-    private ir.moke.foodpicker.repository.JWTCredentialRepository JWTCredentialRepository;
+    private JWTCredentialRepository jwtCredentialRepository;
 
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext context) throws AuthenticationException {
         String reqUri = request.getRequestURI();
@@ -144,7 +145,7 @@ public class SsoAuthenticationMechanism implements HttpAuthenticationMechanism {
                 profileRepository.saveOrUpdate(userProfile);
                 token = tokenProvider.createToken(userProfile.getUsername(), roleNames);
                 JWTCredential credential = new JWTCredential(userProfile.getUsername(), roleNames, accessToken, token);
-                JWTCredentialRepository.save(credential);
+                jwtCredentialRepository.save(credential);
                 context.getResponse().setHeader("token", "bearer " + token);
                 return context.notifyContainerAboutLogin(userProfile.getUsername(), roleNames);
             } else {

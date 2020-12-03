@@ -18,8 +18,24 @@
 package ir.moke.foodpicker.entity;
 
 public enum FoodType {
-    FOOD,
-    DRINK,
-    SALAD,
-    DESSERT
+    FOOD(1,"غذا"),
+    DRINK(2,"نوشیدنی"),
+    SALAD(3,"سالاد"),
+    DESSERT(4,"دسر");
+
+    private int index ;
+    private String name ;
+
+    FoodType(int index, String name) {
+        this.index = index ;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getIndex() {
+        return index;
+    }
 }

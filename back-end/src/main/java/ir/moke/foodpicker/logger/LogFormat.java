@@ -37,7 +37,7 @@ public class LogFormat extends SimpleFormatter implements TtyCodecs {
         String className = record.getSourceClassName();
         String methodName = record.getSourceMethodName();
         String message = record.getMessage();
-        return "[" + levelName + "] "  + localDateTime.format(getDateTimeFormatter()) + " [" + threadID + "] " + className + " [" + methodName + "] :> " + message + "\n";
+        return "[" + levelName + "] "  + localDateTime.format(getDateTimeFormatter()) + " [" + threadID + "] " + className + " [" + methodName + "]: " + message + "\n";
     }
 
     private String getDateFormat() {

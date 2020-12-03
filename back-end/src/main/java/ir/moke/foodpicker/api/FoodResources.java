@@ -23,17 +23,22 @@ import ir.moke.foodpicker.repository.FoodRepository;
 import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Path("food")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Stateless
 public class FoodResources {
+
+    @Inject
+    private Logger logger;
 
     @EJB
     private FoodRepository foodRepository;
@@ -49,6 +54,7 @@ public class FoodResources {
     @Path("save")
     @RolesAllowed("FOOD_MANAGER")
     public Response add(@Valid Food food) {
+        logger.info("Add new food " + food.getName());
         foodRepository.saveOrUpdate(food);
         return Response.ok(food).build();
     }
@@ -78,6 +84,7 @@ public class FoodResources {
     @Path("/delete/{id}")
     @RolesAllowed({"FOOD_MANAGER"})
     public Response deleteFood(@PathParam("id") long id) {
+        logger.warning("Remove food id:" + id);
         foodRepository.delete(id);
         return Response.ok().build();
     }
