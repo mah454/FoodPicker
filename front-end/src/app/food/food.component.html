@@ -1,9 +1,9 @@
 <section>
-  <span class="close-btn mdi mdi-window-close"></span>
+  <span class="close-btn mdi mdi-window-close" (click)="removeFood()"></span>
   <div class="picture">
     <img src="../../assets/images/no-food.jpg" />
   </div>
   <div class="food-title">
-    <span>کباب کوبیده</span>
+    <span *ngIf="food">{{ food.name }}</span>
   </div>
 </section>

@@ -17,17 +17,31 @@
 
 package ir.moke.foodpicker.entity;
 
-public enum FoodType {
-    FOOD(1,"غذا"),
-    DRINK(2,"نوشیدنی"),
-    SALAD(3,"سالاد"),
-    DESSERT(4,"دسر");
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
 
-    private int index ;
-    private String name ;
+@XmlEnum
+@XmlType
+public enum FoodType {
+
+    @XmlEnumValue("FOOD")
+    FOOD(1, "غذا"),
+
+    @XmlEnumValue("DRINK")
+    DRINK(2, "نوشیدنی"),
+
+    @XmlEnumValue("SALAD")
+    SALAD(3, "سالاد"),
+
+    @XmlEnumValue("DESSERT")
+    DESSERT(4, "دسر");
+
+    private int index;
+    private String name;
 
     FoodType(int index, String name) {
-        this.index = index ;
+        this.index = index;
         this.name = name;
     }
 

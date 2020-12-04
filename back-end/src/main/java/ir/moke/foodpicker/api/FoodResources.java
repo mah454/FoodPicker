@@ -18,6 +18,7 @@
 package ir.moke.foodpicker.api;
 
 import ir.moke.foodpicker.entity.Food;
+import ir.moke.foodpicker.entity.FoodType;
 import ir.moke.foodpicker.repository.FoodRepository;
 
 import javax.annotation.security.RolesAllowed;
@@ -46,8 +47,8 @@ public class FoodResources {
     @GET
     @Path("list")
     @RolesAllowed({"FOOD_MANAGER"})
-    public Response list() {
-        return Response.ok(foodRepository.findAll()).build();
+    public Response list(@QueryParam("foodType") FoodType foodType) {
+        return Response.ok(foodRepository.findAll(foodType)).build();
     }
 
     @POST
@@ -87,5 +88,13 @@ public class FoodResources {
         logger.warning("Remove food id:" + id);
         foodRepository.delete(id);
         return Response.ok().build();
+    }
+
+    public static void sleep(long mills) {
+        try {
+            Thread.sleep(mills);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

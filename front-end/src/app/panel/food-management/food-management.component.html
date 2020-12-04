@@ -1,39 +1,82 @@
 <article>
+  <input id="tab1" type="radio" checked="checked" name="groupTab" />
+  <input id="tab2" type="radio" name="groupTab" />
+  <input id="tab3" type="radio" name="groupTab" />
   <nav>
-    <form>
-      <div class="searchBox">
-        <span class="mdi mdi-magnify searchIcon"></span>
-        <input type="text" placeholder="جستجو یا اضافه کردن" />
-      </div>
-    </form>
+    <div class="searchBox">
+      <span class="mdi mdi-sync searchIcon" (change)="saveFood()"></span>
+      <form (submit)="saveFood()" action="#">
+        <input
+          name="foodSearch"
+          type="text"
+          placeholder="جستجو یا اضافه کردن"
+          [(ngModel)]="foodName"
+        />
+      </form>
+    </div>
 
     <div class="navigation">
       <ul>
-        <li
-          class="navigation-btn"
-          routerLink="food-definition"
-          routerLinkActive="activeLink"
-        >
-          <span class="mdi mdi-hamburger"></span>
+        <li class="navigation-btn tab1" (click)="swichTab('FOOD')">
+          <label for="tab1"><span class="mdi mdi-hamburger"></span></label>
         </li>
-        <li
-          class="navigation-btn"
-          routerLink="drink-definition"
-          routerLinkActive="activeLink"
-        >
-          <span class="mdi mdi-beer-outline"></span>
+
+        <li class="navigation-btn tab2" (click)="swichTab('DRINK')">
+          <label for="tab2"><span class="mdi mdi-beer-outline"></span></label>
         </li>
-        <li
-          class="navigation-btn"
-          routerLink="salad-definition"
-          routerLinkActive="activeLink"
-        >
-          <span class="mdi mdi-chili-hot"></span>
+
+        <li class="navigation-btn tab3" (click)="swichTab('SALAD')">
+          <label for="tab3"><span class="mdi mdi-chili-hot"></span></label>
         </li>
       </ul>
     </div>
   </nav>
-  <section>
-    <router-outlet></router-outlet>
+  <section class="content-tab1">
+    <div class="content">
+      <app-spinner class="spinner center" *ngIf="showSpinner"></app-spinner>
+      <ng-container *ngIf="!showSpinner">
+        <app-food
+          *ngFor="let food of foodList | foodFilterPipe: foodName"
+          [food]="food"
+          (remove)="removeFood($event)"
+        ></app-food>
+      </ng-container>
+      <span
+        *ngIf="this.foodList.length == 0 && !showSpinner"
+        class="mdi mdi-food-off no-food center"
+      ></span>
+    </div>
+  </section>
+  <section class="content-tab2">
+    <div class="content">
+      <app-spinner class="spinner center" *ngIf="showSpinner"></app-spinner>
+      <ng-container *ngIf="!showSpinner">
+        <app-food
+          *ngFor="let food of foodList | foodFilterPipe: foodName"
+          [food]="food"
+          (remove)="removeFood($event)"
+        ></app-food>
+      </ng-container>
+      <span
+        *ngIf="this.foodList.length == 0 && !showSpinner"
+        class="mdi mdi-food-off no-food center"
+      ></span>
+    </div>
+  </section>
+  <section class="content-tab3">
+    <div class="content">
+      <app-spinner class="spinner center" *ngIf="showSpinner"></app-spinner>
+      <ng-container *ngIf="!showSpinner">
+        <app-food
+          *ngFor="let food of foodList | foodFilterPipe: foodName"
+          [food]="food"
+          (remove)="removeFood($event)"
+        ></app-food>
+      </ng-container>
+      <span
+        *ngIf="this.foodList.length == 0 && !showSpinner"
+        class="mdi mdi-food-off no-food center"
+      ></span>
+    </div>
   </section>
 </article>

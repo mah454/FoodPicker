@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { ApiService } from "../_services/api.service";
+import { AuthService } from "../_services/Auth.service";
 
 @Component({
   selector: "app-panel",
@@ -9,7 +9,7 @@ import { ApiService } from "../_services/api.service";
 })
 export class PanelComponent {
   showSpinner = true;
-  constructor(private api: ApiService, private router: Router) {
+  constructor(private api: AuthService, private router: Router) {
     let token = api.getToken();
     if (token) {
       api.verifyToken().subscribe(

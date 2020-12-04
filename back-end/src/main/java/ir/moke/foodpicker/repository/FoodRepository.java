@@ -18,26 +18,23 @@
 package ir.moke.foodpicker.repository;
 
 import ir.moke.foodpicker.entity.Food;
+import ir.moke.foodpicker.entity.FoodType;
 import ir.moke.foodpicker.exception.BusinessException;
 import ir.moke.foodpicker.exception.DatabaseExceptionMapper;
 import ir.moke.foodpicker.exception.ExceptionCode;
 import ir.moke.foodpicker.utils.JsonUtils;
 
-import javax.annotation.Resource;
 import javax.ejb.Stateless;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
+import javax.persistence.Query;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
 @Stateless
-@TransactionManagement(TransactionManagementType.BEAN)
 public class FoodRepository {
 
     @Inject
@@ -46,25 +43,22 @@ public class FoodRepository {
     @PersistenceContext
     private EntityManager em;
 
-    @Resource
-    private UserTransaction transaction;
-
     private void handleDatabaseException(Food food, Exception e) {
-        String foodType = food.getFoodType() != null ? food.getFoodType().getName() : "غذا";
+        String foodType = food != null && food.getFoodType() != null ? food.getFoodType().getName() : "غذا";
         String sqlState = DatabaseExceptionMapper.getSqlState(e);
         if (sqlState.equals("23505")) {
             throw new BusinessException(ExceptionCode.OBJECT_EXISTS, String.format("این %s در حال حاظر موجود می باشد.", foodType));
         } else {
-            e.printStackTrace();
-            throw new BusinessException(ExceptionCode.UNKNOWN_ERROR);
+            logger.fine("Internal error " + e.getMessage());
+            throw new BusinessException(ExceptionCode.UNKNOWN_ERROR, "خطای داخلی", e);
         }
     }
 
     public void save(Food food) {
         try {
-            transaction.begin();
+            em.getTransaction().begin();
             em.persist(food);
-            transaction.commit();
+            em.getTransaction().commit();
         } catch (Exception e) {
             handleDatabaseException(food, e);
         }
@@ -103,11 +97,27 @@ public class FoodRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Food> findAll() {
-        return (List<Food>) em.createQuery("from Food").getResultList();
+    public List<Food> findAll(FoodType foodType) {
+        String hql = "select f from Food f where 1=1 ";
+
+        if (foodType != null) {
+            hql += "and f.foodType=:fType ";
+        }
+
+        Query query = em.createQuery(hql);
+        if (foodType != null ) {
+            query.setParameter("fType",foodType);
+        }
+        return query.getResultList();
     }
 
     public void delete(long id) {
-        findById(id).ifPresent(em::remove);
+        int result = em.createQuery("delete from Food where id=:id")
+                .setParameter("id", id)
+                .executeUpdate();
+        if (result == 0) {
+            logger.fine("Food not exists:" + id);
+            throw new BusinessException(BusinessException.OBJECT_NOT_EXIST, "موجود نمی باشد");
+        }
     }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { ApiService } from "../_services/api.service";
+import { AuthService } from "../_services/Auth.service";
 
 @Component({
   selector: "app-login",
@@ -9,7 +9,7 @@ import { ApiService } from "../_services/api.service";
 })
 export class LoginComponent implements OnInit {
   showSpinner = true;
-  constructor(private api: ApiService, private router: Router) {
+  constructor(private api: AuthService, private router: Router) {
     let queryParams = this.getParameters();
     let token = api.getToken();
     if (token) {
@@ -25,7 +25,6 @@ export class LoginComponent implements OnInit {
         }
       );
     } else {
-      console.log("Token not Exists");
       token = queryParams["token"];
       if (token) {
         api.storeToken(token);

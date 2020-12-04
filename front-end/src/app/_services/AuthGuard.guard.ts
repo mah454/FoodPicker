@@ -1,12 +1,12 @@
 import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
-import { ApiService } from "./api.service";
+import { AuthService } from "./Auth.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthGuard implements CanActivate {
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(private api: AuthService, private router: Router) {}
 
   canActivate() {
     if (this.api.getToken()) {

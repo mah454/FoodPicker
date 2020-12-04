@@ -20,6 +20,12 @@ public class BusinessException extends RuntimeException implements ExceptionCode
         this.code = code;
     }
 
+    public BusinessException(int code, String message, Throwable cause) {
+        super(message, cause);
+        this.message = message;
+        this.code = code;
+    }
+
     public int getCode() {
         return code;
     }

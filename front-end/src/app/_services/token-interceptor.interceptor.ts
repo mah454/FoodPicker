@@ -6,11 +6,11 @@ import {
 } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { ApiService } from "./api.service";
+import { AuthService } from "./Auth.service";
 
 @Injectable()
 export class TokenInterceptorInterceptor implements HttpInterceptor {
-  constructor(private api: ApiService) {}
+  constructor(private api: AuthService) {}
 
   intercept(
     request: HttpRequest<any>,

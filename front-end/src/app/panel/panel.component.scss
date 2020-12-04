@@ -35,14 +35,24 @@ main {
   display: grid;
   grid-template-columns: 1fr 70px;
   grid-template-rows: 1fr;
+  grid-template-areas: "article aside";
   color: white;
 
   aside {
+    grid-area: aside;
     background-color: #010101;
     opacity: 0.4;
     border-left: 1px solid #777;
     display: grid;
     align-content: center;
     justify-content: center;
+    gap: 8px;
+    // height: 100%;
+  }
+
+  article {
+    grid-area: article;
+    width: 100%;
+    height: 100%;
   }
 }
