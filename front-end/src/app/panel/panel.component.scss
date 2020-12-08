@@ -35,24 +35,50 @@ main {
   display: grid;
   grid-template-columns: 1fr 70px;
   grid-template-rows: 1fr;
-  grid-template-areas: "article aside";
+  grid-template-areas: "article nav";
   color: white;
 
-  aside {
-    grid-area: aside;
+  nav {
+    grid-area: nav;
     background-color: #010101;
     opacity: 0.4;
     border-left: 1px solid #777;
     display: grid;
-    align-content: center;
-    justify-content: center;
-    gap: 8px;
-    // height: 100%;
+    align-items: center;
+
+    .grpbtn {
+      width: 100%;
+      display: grid;
+      justify-content: center;
+      gap: 8px;
+    }
   }
 
   article {
+    position: absolute;
     grid-area: article;
     width: 100%;
     height: 100%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  main {
+    grid-template-columns: 1fr;
+    grid-template-rows: 70px 1fr;
+    grid-template-areas: "nav" "article";
+
+    nav {
+      grid-area: nav;
+      border-bottom: 1px solid #777;
+      width: 100%;
+      height: 70px;
+      display: flex;
+      align-items: center;
+    }
+
+    article {
+      grid-area: article;
+    }
   }
 }

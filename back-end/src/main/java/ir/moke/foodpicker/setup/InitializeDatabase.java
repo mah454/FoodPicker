@@ -29,6 +29,7 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.logging.Logger;
 
 @Startup
@@ -42,13 +43,20 @@ public class InitializeDatabase implements TtyCodecs {
     @Resource(name = "jdbc/jta-datasource")
     private DataSource dataSource;
 
+    private SQLException sqlException;
+
     @PostConstruct
-    public void init() {
-        logger.info(BACKGROUND_GREEN + "*** DATABASE INITIALIZATION STARTED ***" + RESET);
-        Flyway flyway = Flyway.configure().configuration(getConfiguration()).load();
-        flyway.repair();
-        flyway.migrate();
-        logger.info(BACKGROUND_GREEN + "*** DATABASE INITIALIZATION COMPLETED ***" + RESET);
+    public void initializeDatabase() {
+        if (isConnected()) {
+            logger.info(BACKGROUND_GREEN + "*** DATABASE INITIALIZATION STARTED ***" + RESET);
+            Flyway flyway = Flyway.configure().configuration(getConfiguration()).load();
+            flyway.repair();
+            flyway.migrate();
+            logger.info(BACKGROUND_GREEN + "*** DATABASE INITIALIZATION COMPLETED ***" + RESET);
+        } else {
+            logger.info(BACKGROUND_RED + "WARNING: Cannot connect to database" + RESET);
+            logger.info(BACKGROUND_RED + sqlException.getMessage() + RESET);
+        }
     }
 
     private Configuration getConfiguration() {
@@ -56,5 +64,15 @@ public class InitializeDatabase implements TtyCodecs {
                 .baselineOnMigrate(true)
                 .locations("classpath:db/migration")
                 .dataSource(dataSource);
+    }
+
+    private boolean isConnected() {
+        try {
+            dataSource.getConnection();
+            return true;
+        } catch (SQLException throwable) {
+            this.sqlException = throwable;
+            return false;
+        }
     }
 }

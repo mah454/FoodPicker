@@ -2,11 +2,38 @@ article {
   height: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 60px 1fr;
+  grid-template-rows: 60px 100vh;
   grid-template-areas: "nav" "tabContent";
 
   input[type="radio"] {
     display: none;
+  }
+
+  section {
+    height: calc(100vh - 60px);
+    grid-area: tabContent;
+    display: block;
+
+    .content {
+      overflow: auto;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-auto-rows: 250px;
+
+      .spinner {
+        padding: 0;
+        margin: 0;
+        width: auto;
+        height: auto;
+      }
+
+      .no-food {
+        font-size: 82px;
+        color: red;
+      }
+    }
   }
 }
 
@@ -102,29 +129,56 @@ article > section {
   box-shadow: 0px 0px 13px 0px rgba(173, 255, 47, 0.75);
 }
 
-section {
-  height: calc(100vh - 80px);
-  grid-area: tabContent;
-  margin: 10px;
+@media only screen and (max-width: 600px) {
+  article {
+    grid-template-rows: 120px 1fr;
 
-  .content {
-    overflow: auto;
-    padding: 12px;
-    display: grid;
-    gap: 8px;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    grid-auto-rows: 250px;
-
-    .spinner {
-      padding: 0;
-      margin: 0;
-      width: auto;
-      height: auto;
+    section {
+      height: calc(100vh - 190px);
     }
+    nav {
+      padding: 2px;
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr 1fr;
+      grid-template-areas: "searchBox" "navigation";
 
-    .no-food {
-      font-size: 82px;
-      color: red;
+      .searchBox {
+        right: 0;
+        left: 0;
+        top: 0;
+        grid-area: searchBox;
+        width: 100%;
+
+        input {
+          border: unset;
+          border-bottom: 1px solid #777;
+          border-radius: unset;
+          float: right;
+          width: 100%;
+        }
+      }
+
+      .navigation {
+        position: unset;
+        grid-area: navigation;
+        width: 100%;
+        float: left;
+        margin: 0;
+        padding: 0;
+        display: flex;
+
+        ul {
+          padding: 0;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          li {
+            margin-left: 8px;
+            padding: 0;
+          }
+        }
+      }
     }
   }
 }

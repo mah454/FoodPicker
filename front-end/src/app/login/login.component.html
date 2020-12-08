@@ -1,24 +1,39 @@
 <div class="spinner">
   <app-spinner *ngIf="showSpinner" [type]="'full-page'"></app-spinner>
 </div>
-<main *ngIf="!showSpinner">
-  <div class="trigger">
-    <div class="polygon-box p1">
+
+<div class="bigScreen center">
+  <main *ngIf="!showSpinner">
+    <div class="trigger">
+      <div class="polygon-box p1">
+        <img class="bk-img" src="../../assets/images/login-food.jpg" />
+        <div class="btn" (click)="login()">
+          <img class="btn-logo" src="../../assets/images/fanap-logo.png" />
+          ورود با حساب کاربری فناپ
+        </div>
+      </div>
+
+      <div class="polygon-box p2">
+        <img class="bk-img" src="../../assets/images/login-food.jpg" />
+        <div class="btn" (click)="login()">ورود با حساب کاربری فناپ</div>
+      </div>
+
+      <div class="polygon-box p3">
+        <img class="bk-img" src="../../assets/images/login-food.jpg" />
+        <div class="btn" (click)="login()">ورود با حساب کاربری فناپ</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="minScreen center">
+  <main>
+    <div class="polygon-box">
       <img class="bk-img" src="../../assets/images/login-food.jpg" />
       <div class="btn" (click)="login()">
         <img class="btn-logo" src="../../assets/images/fanap-logo.png" />
         ورود با حساب کاربری فناپ
       </div>
     </div>
-
-    <div class="polygon-box p2">
-      <img class="bk-img" src="../../assets/images/login-food.jpg" />
-      <div class="btn" (click)="login()">ورود با حساب کاربری فناپ</div>
-    </div>
-
-    <div class="polygon-box p3">
-      <img class="bk-img" src="../../assets/images/login-food.jpg" />
-      <div class="btn" (click)="login()">ورود با حساب کاربری فناپ</div>
-    </div>
-  </div>
-</main>
+  </main>
+</div>

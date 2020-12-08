@@ -16,26 +16,35 @@
     <article>
       <router-outlet></router-outlet>
     </article>
-    <aside>
-      <div class="navigation-btn">
-        <span class="mdi mdi-calendar-cursor"></span>
+    <nav>
+      <div class="grpbtn">
+        <div class="navigation-btn">
+          <span class="mdi mdi-calendar-cursor"></span>
+        </div>
+        <div
+          class="navigation-btn"
+          routerLink="food-management"
+          routerLinkActive="activeLink"
+        >
+          <span class="mdi mdi-food"></span>
+        </div>
+        <div
+          class="navigation-btn"
+          routerLink="calendar-management"
+          routerLinkActive="activeLink"
+        >
+          <span class="mdi mdi-calendar-month"></span>
+        </div>
+        <div class="navigation-btn">
+          <span class="mdi mdi-clipboard-list-outline"></span>
+        </div>
+        <div class="navigation-btn">
+          <span class="mdi mdi-account-cog"></span>
+        </div>
+        <div class="navigation-btn" (click)="logout()">
+          <span class="mdi mdi-logout"></span>
+        </div>
       </div>
-      <div
-        class="navigation-btn"
-        routerLink="food-management"
-        routerLinkActive="activeLink"
-      >
-        <span class="mdi mdi-hamburger"></span>
-      </div>
-      <div class="navigation-btn">
-        <span class="mdi mdi-clipboard-list-outline"></span>
-      </div>
-      <div class="navigation-btn">
-        <span class="mdi mdi-account-cog"></span>
-      </div>
-      <div class="navigation-btn" (click)="logout()">
-        <span class="mdi mdi-logout"></span>
-      </div>
-    </aside>
+    </nav>
   </main>
 </div>

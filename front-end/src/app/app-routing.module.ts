@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
+import { CalendarManagementComponent } from "./calendar-management/calendar-management.component";
 import { LoginComponent } from "./login/login.component";
 import { FoodManagementComponent } from "./panel/food-management/food-management.component";
 import { PanelComponent } from "./panel/panel.component";
@@ -12,6 +13,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       { path: "food-management", component: FoodManagementComponent },
+      { path: "calendar-management", component: CalendarManagementComponent },
       { path: "**", redirectTo: "food-management", pathMatch: "full" },
     ],
   },
