@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { CalendarManagementComponent } from "./calendar-management/calendar-management.component";
 import { LoginComponent } from "./login/login.component";
+import { CalendarManagementComponent } from "./panel/calendar-management/calendar-management.component";
 import { FoodManagementComponent } from "./panel/food-management/food-management.component";
 import { PanelComponent } from "./panel/panel.component";
 import { AuthGuard } from "./_services/AuthGuard.guard";
